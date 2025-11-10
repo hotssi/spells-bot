@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  spells-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spells-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - spells-network
+
+networks:
+  spells-network:
+    driver: bridge
