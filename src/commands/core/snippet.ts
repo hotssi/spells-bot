@@ -42,16 +42,17 @@ export const snippet: Command = {
 
       logger.debug('Searching snippets with query:', { query, language });
       
-      let results = [];
+      let results: any[] = [];
       try {
         const response = await n8nService.searchSnippets({ query, language });
-        
+
         // 응답이 배열인지 확인
         if (Array.isArray(response)) {
           results = response;
         } else if (response && typeof response === 'object' && 'results' in response) {
           // results 속성이 있는 경우
-          results = Array.isArray(response.results) ? response.results : [];
+          const responseObj = response as { results?: any[] };
+          results = Array.isArray(responseObj.results) ? responseObj.results : [];
         } else {
           // 그 외의 경우 빈 배열로 초기화
           logger.warn('Unexpected response format from n8nService.searchSnippets:', { response });
