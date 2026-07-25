@@ -32,6 +32,7 @@ export function registerMessageReactionAddEvent(client: Client): void {
             const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL_WEB_CLIP;
             if (!n8nWebhookUrl) {
               logger.error('N8N_WEBHOOK_URL_WEB_CLIP environment variable is not set');
+              await message.reply('❌ n8n 웹훅 URL 설정이 누락되어 클립을 저장할 수 없습니다.');
               return;
             }
 
@@ -54,11 +55,33 @@ export function registerMessageReactionAddEvent(client: Client): void {
               logger.error(
                 `n8n webhook returned status: ${response.status} ${response.statusText}`
               );
+              await message.reply(
+                `❌ 웹 클립 전달 중 오류가 발생했습니다. (상태 코드: ${response.status})`
+              );
             } else {
               logger.info('Successfully forwarded clip to n8n webhook');
+              await message.reply('✅ 웹 클립이 성공적으로 전달되었습니다!');
             }
           } catch (error) {
             logger.error('Error handling web clip reaction', error);
+            const msg = reaction.message.partial
+              ? await reaction.message.fetch()
+              : reaction.message;
+            await msg.reply('❌ 웹 클립 처리 중 에러가 발생했습니다.');
+          }
+          return;
+        }
+
+        if (reaction.emoji.name === '❌' && reaction.message.channelId === WEB_CLIP_CHANNEL_ID) {
+          try {
+            const message = reaction.message.partial
+              ? await reaction.message.fetch()
+              : reaction.message;
+
+            await message.reply('🗑️ 해당 클립 수집이 취소(스킵)되었습니다.');
+            // 추가 액션이 필요하면 구현 (예: 메시지 삭제 또는 리액션 초기화)
+          } catch (error) {
+            logger.error('Error handling web clip cancel reaction', error);
           }
           return;
         }
