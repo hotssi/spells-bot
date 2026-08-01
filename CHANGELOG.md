@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.8.0](https://github.com/mindulle/spells-bot/compare/v1.7.0...v1.8.0) (2026-08-01)
+
+
+### Features
+
+* Add n8n operational commands (List, Toggle) ([#90](https://github.com/mindulle/spells-bot/issues/90)) ([1543cd5](https://github.com/mindulle/spells-bot/commit/1543cd5b211bf8f2f64f3ad2e9936c5b36b1d664))
+* **design-clip:** add user feedback for web clip reactions ([#89](https://github.com/mindulle/spells-bot/issues/89)) ([813a9eb](https://github.com/mindulle/spells-bot/commit/813a9eb08e77a3fa6a5ac2f21d3e3f641cc0b16b))
+* **design-clip:** implement Design Clipper to save discord images/links to Eagle Library ([#88](https://github.com/mindulle/spells-bot/issues/88)) ([f0ba953](https://github.com/mindulle/spells-bot/commit/f0ba953262de801577688a933472f2ec99b85c39))
+
+
+### Bug Fixes
+
+* prevent command duplication & add Sentry ([#86](https://github.com/mindulle/spells-bot/issues/86)) ([209012d](https://github.com/mindulle/spells-bot/commit/209012df5f8f20d4161caeb9fc6b90bff78690db))
+
 ## [1.7.0](https://github.com/mindulle/spells-bot/compare/v1.6.1...v1.7.0) (2026-07-18)
 
 ### Features
