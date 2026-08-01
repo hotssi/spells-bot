@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/mindulle/spells-bot/compare/v1.8.0...v1.9.0) (2026-08-01)
+
+
+### Features
+
+* **dashboard:** integrate n8n automation metrics into live dashboard ([#91](https://github.com/mindulle/spells-bot/issues/91)) ([f76c594](https://github.com/mindulle/spells-bot/commit/f76c594343cc7b76c62f4f6b1a83bef7d4e3e1ef))
+
+
+### Bug Fixes
+
+* attach ServiceAccount token to K3s ping ([#93](https://github.com/mindulle/spells-bot/issues/93)) ([f5bdd9d](https://github.com/mindulle/spells-bot/commit/f5bdd9d42313f30dc19c1a32dc5cddedf68be726))
+
 ## [1.8.0](https://github.com/mindulle/spells-bot/compare/v1.7.0...v1.8.0) (2026-08-01)
 
 
