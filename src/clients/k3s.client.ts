@@ -1,26 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import axios from 'axios';
 import * as https from 'https';
+import * as fs from 'fs';
 import { logger } from '../utils/logger';
 
 class K3sClient {
   private static instance: K3sClient;
   private apiUrl: string;
   private httpsAgent: https.Agent | undefined;
+  private token: string | undefined;
 
   private constructor() {
-    // Usually https://127.0.0.1:6443 or internal cluster IP
     this.apiUrl = process.env.K3S_API_URL || 'https://kubernetes.default.svc';
-
-    // SSL Verification is configurable. Defaults to true (secure)
     const rejectUnauthorized = process.env.K3S_REJECT_UNAUTHORIZED !== 'false';
-
     if (!rejectUnauthorized) {
-      logger.warn(
-        'K3sClient: Strict SSL verification is disabled. Do not use this in production unless necessary.'
-      );
+      logger.warn('K3sClient: Strict SSL verification is disabled.');
     }
-
     this.httpsAgent = new https.Agent({ rejectUnauthorized });
+
+    try {
+      this.token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf-8').trim();
+    } catch (e) {
+      logger.warn('Could not read K8s service account token.');
+    }
   }
 
   public static getInstance(): K3sClient {
@@ -32,12 +34,15 @@ class K3sClient {
 
   public async ping(): Promise<boolean> {
     try {
-      // Standard Kubernetes health check endpoint
+      const headers: Record<string, string> = {};
+      if (this.token) {
+        headers['Authorization'] = `Bearer ${this.token}`;
+      }
       const response = await axios.get(`${this.apiUrl}/livez`, {
         httpsAgent: this.httpsAgent,
+        headers,
         timeout: 5000,
       });
-
       return response.status === 200;
     } catch (error) {
       logger.error('K3s ping failed', error);
