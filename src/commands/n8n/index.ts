@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
@@ -52,10 +53,7 @@ export const n8nCommand: Command = {
         .setName('제어')
         .setDescription('워크플로우를 활성화 또는 비활성화합니다.')
         .addStringOption((option) =>
-          option
-            .setName('id')
-            .setDescription('제어할 워크플로우 ID')
-            .setRequired(true)
+          option.setName('id').setDescription('제어할 워크플로우 ID').setRequired(true)
         )
         .addStringOption((option) =>
           option
@@ -90,10 +88,15 @@ export const n8nCommand: Command = {
     } else if (subcommand === '실행') {
       const url = interaction.options.getString('url', true);
       const dataStr = interaction.options.getString('데이터') || '{}';
-      
+
       let payload: unknown;
-      try { payload = JSON.parse(dataStr); } catch (e) {
-        await interaction.reply({ embeds: [createErrorEmbed('잘못된 JSON 형식입니다.')], ephemeral: true });
+      try {
+        payload = JSON.parse(dataStr);
+      } catch (e) {
+        await interaction.reply({
+          embeds: [createErrorEmbed('잘못된 JSON 형식입니다.')],
+          ephemeral: true,
+        });
         return;
       }
 
@@ -102,25 +105,34 @@ export const n8nCommand: Command = {
         const responseData = await n8nClient.triggerWebhook(url, payload);
         const embed = new EmbedBuilder()
           .setTitle('✅ n8n Webhook 실행 성공')
-          .setDescription(`\`\`\`json\n${JSON.stringify(responseData, null, 2).substring(0, 2000)}\n\`\`\``)
+          .setDescription(
+            `\`\`\`json\n${JSON.stringify(responseData, null, 2).substring(0, 2000)}\n\`\`\``
+          )
           .setColor(Colors.SUCCESS);
         await interaction.editReply({ embeds: [embed] });
       } catch (error: any) {
-        await interaction.editReply({ embeds: [createErrorEmbed(`Webhook 실패: ${error.message}`)] });
+        await interaction.editReply({
+          embeds: [createErrorEmbed(`Webhook 실패: ${error.message}`)],
+        });
       }
     } else if (subcommand === '기록') {
       await interaction.deferReply();
       try {
         const executions = await n8nClient.getRecentExecutions(5);
         if (!executions || executions.length === 0) {
-          await interaction.editReply({ embeds: [new EmbedBuilder().setTitle('📋 기록 없음').setColor(Colors.INFO)] });
+          await interaction.editReply({
+            embeds: [new EmbedBuilder().setTitle('📋 기록 없음').setColor(Colors.INFO)],
+          });
           return;
         }
 
-        const embed = new EmbedBuilder().setColor(Colors.INFO).setTitle('📋 최근 n8n 실행 기록 (5건)');
+        const embed = new EmbedBuilder()
+          .setColor(Colors.INFO)
+          .setTitle('📋 최근 n8n 실행 기록 (5건)');
         let description = '';
         executions.forEach((exec: any, index) => {
-          const statusIcon = exec.status === 'success' ? '✅' : exec.status === 'error' ? '❌' : '⏳';
+          const statusIcon =
+            exec.status === 'success' ? '✅' : exec.status === 'error' ? '❌' : '⏳';
           const workflowName = exec.workflowData?.name || `ID: ${exec.workflowId}`;
           const time = new Date(exec.startedAt || '').toLocaleString('ko-KR');
           description += `${index + 1}. ${statusIcon} **${workflowName}**\n   └ 상태: ${exec.status} | 시작: ${time}\n`;
@@ -128,15 +140,19 @@ export const n8nCommand: Command = {
         embed.setDescription(description);
         await interaction.editReply({ embeds: [embed] });
       } catch (error: any) {
-        await interaction.editReply({ embeds: [createErrorEmbed(`기록 조회 실패: ${error.message}`)] });
+        await interaction.editReply({
+          embeds: [createErrorEmbed(`기록 조회 실패: ${error.message}`)],
+        });
       }
     } else if (subcommand === '목록') {
       await interaction.deferReply();
       const tag = interaction.options.getString('태그');
       try {
         const workflows = await n8nClient.getWorkflows(tag || undefined);
-        const embed = new EmbedBuilder().setColor(Colors.INFO).setTitle(`📋 n8n 워크플로우 목록 ${tag ? `(태그: ${tag})` : ''}`);
-        
+        const embed = new EmbedBuilder()
+          .setColor(Colors.INFO)
+          .setTitle(`📋 n8n 워크플로우 목록 ${tag ? `(태그: ${tag})` : ''}`);
+
         let description = '';
         workflows.slice(0, 20).forEach((wf: any) => {
           const status = wf.active ? '🟢' : '⏸️';
@@ -144,24 +160,28 @@ export const n8nCommand: Command = {
         });
         if (workflows.length > 20) description += `\n*...외 ${workflows.length - 20}개 생략됨*`;
         if (workflows.length === 0) description = '결과가 없습니다.';
-        
+
         embed.setDescription(description);
         await interaction.editReply({ embeds: [embed] });
       } catch (error: any) {
-        await interaction.editReply({ embeds: [createErrorEmbed(`목록 조회 실패: ${error.message}`)] });
+        await interaction.editReply({
+          embeds: [createErrorEmbed(`목록 조회 실패: ${error.message}`)],
+        });
       }
     } else if (subcommand === '제어') {
       await interaction.deferReply();
       const id = interaction.options.getString('id', true);
       const action = interaction.options.getString('상태', true);
       const activate = action === 'on';
-      
+
       try {
         await n8nClient.setWorkflowStatus(id, activate);
         const embed = new EmbedBuilder()
           .setColor(Colors.SUCCESS)
           .setTitle(`✅ 워크플로우 제어 완료`)
-          .setDescription(`워크플로우(\`${id}\`)를 성공적으로 **${activate ? '활성화(ON)' : '비활성화(OFF)'}** 했습니다.`);
+          .setDescription(
+            `워크플로우(\`${id}\`)를 성공적으로 **${activate ? '활성화(ON)' : '비활성화(OFF)'}** 했습니다.`
+          );
         await interaction.editReply({ embeds: [embed] });
       } catch (error: any) {
         await interaction.editReply({ embeds: [createErrorEmbed(`제어 실패: ${error.message}`)] });

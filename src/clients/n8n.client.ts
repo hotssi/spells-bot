@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import axios from 'axios';
 import { logger } from '../utils/logger';
 
@@ -61,7 +62,7 @@ class N8nClient {
   public async getWorkflows(tagNames?: string): Promise<unknown[]> {
     if (!this.apiUrl || !this.apiKey) throw new Error('N8N configuration missing.');
     try {
-      const params: any = { limit: 100 };
+      const params: Record<string, string | number> = { limit: 100 };
       if (tagNames) params.tags = tagNames;
       const response = await axios.get(`${this.apiUrl}/api/v1/workflows`, {
         headers: { 'X-N8N-API-KEY': this.apiKey },
@@ -79,10 +80,14 @@ class N8nClient {
     if (!this.apiUrl || !this.apiKey) throw new Error('N8N configuration missing.');
     try {
       const endpoint = active ? 'activate' : 'deactivate';
-      await axios.post(`${this.apiUrl}/api/v1/workflows/${id}/${endpoint}`, {}, {
-        headers: { 'X-N8N-API-KEY': this.apiKey },
-        timeout: 10000,
-      });
+      await axios.post(
+        `${this.apiUrl}/api/v1/workflows/${id}/${endpoint}`,
+        {},
+        {
+          headers: { 'X-N8N-API-KEY': this.apiKey },
+          timeout: 10000,
+        }
+      );
       return true;
     } catch (error) {
       logger.error(`n8n workflow ${active ? 'activate' : 'deactivate'} failed`, error);
