@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import { Client, EmbedBuilder, TextChannel } from 'discord.js';
 import { logger } from '../utils/logger';
 import { healthService } from './health.service';
 import { NotionService } from './notion';
 import { PaperclipService } from './paperclip';
+import { n8nClient } from '../clients/n8n.client';
 import { Colors } from '../utils/embed-builder';
 
 export class DashboardService {
@@ -38,12 +40,25 @@ export class DashboardService {
         if (companyId && process.env.PAPERCLIP_API_TOKEN) {
           const approvals = await PaperclipService.listApprovals(companyId, 'pending');
           pendingApprovals = approvals.length;
-
-          // You could also fetch agent status if there's an API for it,
-          // but for now we'll just mock it or skip it if there isn't.
         }
       } catch (e) {
         logger.warn('Failed to fetch Paperclip stats for dashboard', e);
+      }
+
+      // n8n Automation Stats
+      let activeWfCount = 0;
+      let totalWfCount = 0;
+      let recentErrors = 0;
+      try {
+        const [workflows, executions] = await Promise.all([
+          n8nClient.getWorkflows().catch(() => []),
+          n8nClient.getRecentExecutions(20).catch(() => []),
+        ]);
+        totalWfCount = workflows.length;
+        activeWfCount = workflows.filter((w: any) => w.active).length;
+        recentErrors = executions.filter((e: any) => e.status === 'error').length;
+      } catch (e) {
+        logger.warn('Failed to fetch n8n stats for dashboard', e);
       }
 
       // 2. Build Embed
@@ -52,16 +67,31 @@ export class DashboardService {
       const embed = new EmbedBuilder()
         .setColor(isAllHealthy ? Colors.SUCCESS : Colors.ERROR)
         .setTitle('🖥️ Sonagi Live Dashboard')
-        .setDescription('이 메시지는 시스템 상태를 실시간으로 모니터링하여 자동으로 갱신됩니다.')
+        .setDescription(
+          '이 메시지는 시스템 상태를 5분 주기로 모니터링하여 자동으로 갱신됩니다. (업데이트에 의한 팝업/푸시 알림은 발생하지 않습니다.)'
+        )
         .addFields(
           {
-            name: '⚙️ 인프라 상태 (DevOps)',
-            value: `K3s Cluster: ${health.k3s ? '🟢 Online' : '🔴 Offline'}\nMinIO Storage: ${health.minio ? '🟢 Online' : '🔴 Offline'}\nn8n Workflows: ${health.n8n ? '🟢 Online' : '🔴 Offline'}`,
+            name: '⚙️ 핵심 인프라 (DevOps)',
+            value: `**K3s Cluster**: ${health.k3s ? '🟢 Online' : '🔴 Offline'}\n**MinIO Storage**: ${health.minio ? '🟢 Online' : '🔴 Offline'}`,
+            inline: true,
+          },
+          {
+            name: '⚡ 초자동화 (n8n Engine)',
+            value: `**서버 상태**: ${health.n8n ? '🟢 Online' : '🔴 Offline'}\n**가동 봇**: ${activeWfCount}/${totalWfCount}개 Active\n**최근 에러**: ${recentErrors > 0 ? `🚨 ${recentErrors}건 (system-alerts 확인 요망)` : '✅ 0건 (안정적)'}`,
+            inline: true,
+          },
+          {
+            name: '\u200B', // Blank field for spacing
+            value: '\u200B',
             inline: false,
           },
           {
-            name: '🤖 AI 에이전트 (Paperclip)',
-            value: `결재 대기 중: **${pendingApprovals}건**`,
+            name: '🤖 에이전트 결재 (Paperclip)',
+            value:
+              pendingApprovals > 0
+                ? `🔥 **승인 대기 중**: ${pendingApprovals}건`
+                : '✅ 대기 중인 결재 없음',
             inline: true,
           },
           {
