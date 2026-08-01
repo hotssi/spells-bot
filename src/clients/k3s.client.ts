@@ -19,7 +19,9 @@ class K3sClient {
     this.httpsAgent = new https.Agent({ rejectUnauthorized });
 
     try {
-      this.token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf-8').trim();
+      this.token = fs
+        .readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf-8')
+        .trim();
     } catch (e) {
       logger.warn('Could not read K8s service account token.');
     }
