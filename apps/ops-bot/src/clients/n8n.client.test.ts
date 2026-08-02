@@ -7,7 +7,7 @@ import { logger } from '@sonagi-bots/shared';
 vi.mock('axios');
 const mockedAxios = vi.mocked(axios, true);
 
-vi.mock('../utils/logger', () => ({
+vi.mock('@sonagi-bots/shared', () => ({
   logger: {
     error: vi.fn(),
     info: vi.fn(),
