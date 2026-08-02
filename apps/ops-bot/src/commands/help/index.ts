@@ -31,8 +31,7 @@ export const helpCommand: Command = {
         },
         {
           name: '🔄 워크플로우 (n8n)',
-          value:
-            '`/n8n` - n8n 서버 헬스체크 및 워크플로우를 관리합니다.',
+          value: '`/n8n` - n8n 서버 헬스체크 및 워크플로우를 관리합니다.',
         }
       )
       .setFooter({

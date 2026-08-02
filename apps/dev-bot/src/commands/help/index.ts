@@ -23,13 +23,11 @@ export const helpCommand: Command = {
         },
         {
           name: '🧰 유틸리티',
-          value:
-            '`/utils` - 기타 개발 보조 유틸리티 명령어들을 제공합니다.',
+          value: '`/utils` - 기타 개발 보조 유틸리티 명령어들을 제공합니다.',
         },
         {
           name: '🎮 Playgrounds',
-          value:
-            '`/play` - Sonagi Playgrounds 플랫폼과 상호작용합니다.',
+          value: '`/play` - Sonagi Playgrounds 플랫폼과 상호작용합니다.',
         }
       )
       .setFooter({
