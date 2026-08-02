@@ -18,7 +18,9 @@ export function registerMessageCreateEvent(client: Client): void {
           let msgToProcess = message;
           if (imageUrls.length === 0) {
             await new Promise((resolve) => setTimeout(resolve, 3000));
-            try { msgToProcess = await message.fetch(); } catch (err) {}
+            try {
+              msgToProcess = await message.fetch();
+            } catch (err) {}
           }
           msgToProcess.embeds.forEach((embed) => {
             if (embed.image?.url) imageUrls.push(embed.image.url);

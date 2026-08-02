@@ -7,8 +7,8 @@ export class HealthService {
       memory: process.memoryUsage(),
       services: {
         bot: 'online',
-        database: 'connected'
-      }
+        database: 'connected',
+      },
     };
   }
 }

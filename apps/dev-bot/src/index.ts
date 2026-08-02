@@ -44,9 +44,12 @@ async function main() {
     await client.login(token);
 
     void DashboardService.updateDashboard(client);
-    setInterval(() => {
-      void DashboardService.updateDashboard(client);
-    }, 5 * 60 * 1000);
+    setInterval(
+      () => {
+        void DashboardService.updateDashboard(client);
+      },
+      5 * 60 * 1000
+    );
 
     process.on('SIGINT', () => {
       logger.info('Received SIGINT, shutting down gracefully...');
