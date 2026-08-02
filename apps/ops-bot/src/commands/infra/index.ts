@@ -55,7 +55,7 @@ export const infraCommand: Command = {
         if (!wh.channelId) continue;
         
         let category = 'ORPHAN';
-        let creator = wh.owner?.username || 'Unknown';
+        const creator = wh.owner?.username || 'Unknown';
         
         if (!wh.applicationId && wh.name.includes(' #')) {
           category = 'FOLLOW';
