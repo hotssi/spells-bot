@@ -7,9 +7,9 @@ import {
   TextInputStyle,
   ActionRowBuilder,
 } from 'discord.js';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
-import { logger } from '../../utils/logger';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { logger } from '@sonagi-bots/shared';
 import { PaperclipService, PaperclipIssueResponse } from '../../services/paperclip';
 
 export function createIssueSuccessEmbed(issue: PaperclipIssueResponse) {

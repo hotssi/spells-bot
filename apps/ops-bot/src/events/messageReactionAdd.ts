@@ -6,7 +6,7 @@ import {
   User,
   PartialUser,
 } from 'discord.js';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../services/notion';
 
 const WEB_CLIP_CHANNEL_ID = process.env.WEB_CLIP_CHANNEL_ID || '1519250071764336650';

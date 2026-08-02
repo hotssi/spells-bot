@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as https from 'https';
 import * as fs from 'fs';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 class K3sClient {
   private static instance: K3sClient;

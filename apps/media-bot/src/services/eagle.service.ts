@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import axios from 'axios';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 export class EagleService {
   /**

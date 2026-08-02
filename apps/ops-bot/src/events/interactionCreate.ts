@@ -9,12 +9,12 @@ import {
   EmbedBuilder,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import { logger } from '../utils/logger';
-import { handleCommandError } from '../utils/error-handler';
+import { logger } from '@sonagi-bots/shared';
+import { handleCommandError } from '@sonagi-bots/shared';
 import { PaperclipService } from '../services/paperclip';
-import { Colors, createErrorEmbed } from '../utils/embed-builder';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
 import { createIssueSuccessEmbed } from '../commands/paperclip/index';
-import type { CommandMap } from '../types/commands';
+import type { CommandMap } from '@sonagi-bots/shared';
 
 export function registerInteractionCreateEvent(client: Client, commands: CommandMap): void {
   client.on(Events.InteractionCreate, (interaction: Interaction) => {

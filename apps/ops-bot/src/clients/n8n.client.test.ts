@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
 import { n8nClient } from './n8n.client';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 vi.mock('axios');
 const mockedAxios = vi.mocked(axios, true);

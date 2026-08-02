@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
-import { logger } from '../../utils/logger';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../../services/notion';
 
 export const scheduleCommand: Command = {

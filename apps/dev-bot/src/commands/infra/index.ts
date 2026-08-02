@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import type { Command } from '../../types/commands';
+import type { Command } from '@sonagi-bots/shared';
 import { healthService } from '../../services/health.service';
 import { DashboardService } from '../../services/dashboard.service';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
 import axios from 'axios';
 
 const N8N_ANKI_SYNC_WEBHOOK =

@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import type { Command } from '../../types/commands';
+import type { Command } from '@sonagi-bots/shared';
 import { galleryService } from '../../services/gallery.service';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
 
 export const galleryCommand: Command = {
   data: new SlashCommandBuilder()

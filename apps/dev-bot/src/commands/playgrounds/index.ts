@@ -7,9 +7,9 @@ import {
   ButtonStyle,
 } from 'discord.js';
 import axios, { AxiosError } from 'axios';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
-import { logger } from '../../utils/logger';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { logger } from '@sonagi-bots/shared';
 
 interface SandboxApiResponse {
   status: string;

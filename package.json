@@ -1,20 +1,12 @@
 {
-  "name": "spells-bot",
+  "name": "sonagi-bots",
   "version": "1.8.0",
   "description": "All-in-one Discord bot for design and development resources",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "deploy-commands": "ts-node src/scripts/deploy-commands.ts",
-    "clear-commands": "ts-node src/scripts/clear-commands.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "prepare": "husky"
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
   },
   "keywords": [
     "discord",
@@ -69,5 +61,9 @@
     "*.{json,md,yml}": [
       "prettier --write"
     ]
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

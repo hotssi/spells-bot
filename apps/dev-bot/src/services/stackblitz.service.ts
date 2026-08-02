@@ -1,4 +1,4 @@
-import { assertEnvVariable } from '../utils/error-handler';
+import { assertEnvVariable } from '@sonagi-bots/shared';
 
 class StackBlitzService {
   private baseUrl: string;

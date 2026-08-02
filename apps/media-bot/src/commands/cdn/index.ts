@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import type { Command } from '../../types/commands';
+import type { Command } from '@sonagi-bots/shared';
 import { cdnService } from '../../services/cdn.service';
-import { Colors, createErrorEmbed, createSuccessEmbed } from '../../utils/embed-builder';
+import { Colors, createErrorEmbed, createSuccessEmbed } from '@sonagi-bots/shared';
 
 export const cdnCommand: Command = {
   data: new SlashCommandBuilder()

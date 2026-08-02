@@ -5,10 +5,10 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import axios from 'axios';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
-import { logger } from '../../utils/logger';
-import { DEFAULT_USER_AGENT } from '../../utils/constants';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { logger } from '@sonagi-bots/shared';
+import { DEFAULT_USER_AGENT } from '@sonagi-bots/shared';
 import POKEMON_LIST_JSON from './pokemon-list.json';
 
 interface WikiSearchResponse {

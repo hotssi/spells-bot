@@ -5,8 +5,8 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
 } from 'discord.js';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
 import { n8nClient } from '../../clients/n8n.client';
 
 export const n8nCommand: Command = {

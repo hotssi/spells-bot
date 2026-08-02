@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 export interface EagleImage {
   id: string;

@@ -1,5 +1,5 @@
 import * as Minio from 'minio';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 class MinioClientWrapper {
   private static instance: MinioClientWrapper;

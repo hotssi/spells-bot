@@ -1,6 +1,6 @@
 import { Client, isFullPage } from '@notionhq/client';
 import { CreatePageParameters } from '@notionhq/client/build/src/api-endpoints';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 export interface ScheduleItem {
   id: string;

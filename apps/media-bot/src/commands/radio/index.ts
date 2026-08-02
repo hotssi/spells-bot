@@ -16,9 +16,9 @@ import axios from 'axios';
 import Parser from 'rss-parser';
 import { Track, GuildQueue } from 'discord-player';
 import { player } from '../../index';
-import type { Command } from '../../types/commands';
-import { Colors, createErrorEmbed } from '../../utils/embed-builder';
-import { logger } from '../../utils/logger';
+import type { Command } from '@sonagi-bots/shared';
+import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { logger } from '@sonagi-bots/shared';
 
 // Interfaces for API responses
 interface ITunesResult {

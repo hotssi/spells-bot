@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import axios from 'axios';
-import { logger } from '../utils/logger';
+import { logger } from '@sonagi-bots/shared';
 
 class N8nClient {
   private static instance: N8nClient;
