@@ -10,6 +10,7 @@ import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../services/notion';
 
 const WEB_CLIP_CHANNEL_ID = process.env.WEB_CLIP_CHANNEL_ID || '1519250071764336650';
+const DESIGN_CLIP_CHANNEL_ID = process.env.DESIGN_CLIP_CHANNEL_ID || '1528620974948225095';
 
 export function registerMessageReactionAddEvent(client: Client): void {
   client.on(
@@ -82,6 +83,60 @@ export function registerMessageReactionAddEvent(client: Client): void {
             // 추가 액션이 필요하면 구현 (예: 메시지 삭제 또는 리액션 초기화)
           } catch (error) {
             logger.error('Error handling web clip cancel reaction', error);
+          }
+          return;
+        }
+
+        // ----------------------------------------------------
+        // 🎨 디자인 클립 자동화 로직
+        // 🎨 이모지를 클릭하면 메시지의 이미지와 텍스트를 🎨┆design-clip 채널로 큐레이션
+        // ----------------------------------------------------
+        if (reaction.emoji.name === '🎨') {
+          try {
+            const message = reaction.message.partial
+              ? await reaction.message.fetch()
+              : reaction.message;
+
+            // 이미 큐레이션된 메시지는 무시
+            const hasChecked = message.reactions.cache.has('✅');
+            if (hasChecked) return;
+
+            const targetChannel = await client.channels.fetch(DESIGN_CLIP_CHANNEL_ID);
+            if (targetChannel && targetChannel.isTextBased()) {
+              const textChannel = targetChannel as import('discord.js').TextChannel;
+              const authorName = message.author ? message.author.username : 'Unknown';
+              const content = message.content || '';
+
+              // 첨부파일 중 이미지 추출
+              const attachments = message.attachments
+                .filter((a) => a.contentType?.startsWith('image/'))
+                .map((a) => a.url);
+
+              // 원본 메시지 링크
+              const messageUrl = `https://discord.com/channels/${message.guildId || '@me'}/${message.channelId}/${message.id}`;
+
+              const embed = {
+                color: 0x3498db, // INFO
+                author: {
+                  name: authorName,
+                  icon_url: message.author?.displayAvatarURL() || undefined,
+                },
+                description: content
+                  ? `${content}\n\n[원본 메시지 이동](${messageUrl})`
+                  : `[원본 메시지 이동](${messageUrl})`,
+                image: attachments.length > 0 ? { url: attachments[0] } : undefined,
+                timestamp: new Date().toISOString(),
+              };
+
+              const extraImages = attachments.slice(1).join('\n');
+              const extraContent = extraImages ? `**추가 이미지:**\n${extraImages}` : undefined;
+              
+              await textChannel.send({ embeds: [embed], content: extraContent });
+
+              await message.react('✅');
+            }
+          } catch (error) {
+            logger.error('Error handling design clip curation', error);
           }
           return;
         }
