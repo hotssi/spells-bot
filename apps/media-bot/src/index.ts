@@ -11,6 +11,7 @@ import { registerMessageCreateEvent } from './events/messageCreate';
 import { cdnCommand } from './commands/cdn/index';
 import { galleryCommand } from './commands/gallery/index';
 import { radioCommand } from './commands/radio/index';
+import { helpCommand } from './commands/help/index';
 
 import { Player } from 'discord-player';
 export let player: Player;
@@ -51,6 +52,7 @@ async function main() {
       [cdnCommand.data.name, cdnCommand],
       [galleryCommand.data.name, galleryCommand],
       [radioCommand.data.name, radioCommand],
+      [helpCommand.data.name, helpCommand],
     ]);
 
     logger.info(`Registered ${commands.size} commands`);
