@@ -19,7 +19,7 @@ async function main() {
   try {
     logger.info('Starting Media Bot...');
 
-    const token = assertEnvVariable('DISCORD_TOKEN');
+    const token = assertEnvVariable('MEDIA_BOT_TOKEN');
     assertEnvVariable('DISCORD_CLIENT_ID');
 
     const client = new Client({

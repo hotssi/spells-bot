@@ -21,7 +21,7 @@ Sentry.init({
       }
     }
     const eventString = JSON.stringify(event);
-    const token = process.env.DISCORD_TOKEN;
+    const token = process.env.OPS_BOT_TOKEN;
     if (token && eventString.includes(token)) {
       return JSON.parse(eventString.replace(new RegExp(token, 'g'), '[FILTERED_TOKEN]'));
     }
@@ -50,7 +50,7 @@ async function main() {
   try {
     logger.info('Starting Ops Bot...');
 
-    const token = assertEnvVariable('DISCORD_TOKEN');
+    const token = assertEnvVariable('OPS_BOT_TOKEN');
     assertEnvVariable('DISCORD_CLIENT_ID');
 
     if (!process.env.PAPERCLIP_API_TOKEN) {

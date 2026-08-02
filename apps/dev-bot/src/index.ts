@@ -17,7 +17,7 @@ async function main() {
   try {
     logger.info('Starting Dev Bot...');
 
-    const token = assertEnvVariable('DISCORD_TOKEN');
+    const token = assertEnvVariable('DEV_BOT_TOKEN');
     assertEnvVariable('DISCORD_CLIENT_ID');
 
     const client = new Client({
