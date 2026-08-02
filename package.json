@@ -4,7 +4,7 @@
   "description": "All-in-one Discord bot for design and development resources",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @sonagi-bots/shared && npm run build -w @sonagi-bots/ops-bot -w @sonagi-bots/dev-bot -w @sonagi-bots/media-bot",
     "lint": "eslint \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\"",
     "test": "vitest run",
     "dev": "concurrently -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" -n \"OPS,MEDIA,DEV\" \"npm run dev -w @sonagi-bots/ops-bot\" \"npm run dev -w @sonagi-bots/media-bot\" \"npm run dev -w @sonagi-bots/dev-bot\"",
