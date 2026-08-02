@@ -1,17 +1,41 @@
 version: '3.8'
 
 services:
-  spells-bot:
+  ops-bot:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spells-bot
+    container_name: sonagi-ops-bot
     restart: unless-stopped
     env_file:
       - .env
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
+      - APP_NAME=ops-bot
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - sonagi-network
+
+  media-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sonagi-media-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - APP_NAME=media-bot
       - LAVALINK_URL=lavalink:2333
       - LAVALINK_PASSWORD=youshallnotpass
       - LAVALINK_SECURE=false
@@ -24,7 +48,32 @@ services:
         max-size: '10m'
         max-file: '3'
     networks:
-      - spells-network
+      - sonagi-network
+    depends_on:
+      - lavalink
+
+  dev-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sonagi-dev-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - APP_NAME=dev-bot
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - sonagi-network
 
   lavalink:
     image: ghcr.io/lavalink-devs/lavalink:4
@@ -34,10 +83,10 @@ services:
       - SERVER_PORT=2333
       - LAVALINK_SERVER_PASSWORD=youshallnotpass
     networks:
-      - spells-network
+      - sonagi-network
     ports:
       - '2333:2333'
 
 networks:
-  spells-network:
+  sonagi-network:
     driver: bridge
