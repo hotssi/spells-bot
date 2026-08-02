@@ -1,20 +1,14 @@
 {
-  "name": "spells-bot",
+  "name": "sonagi-bots",
   "version": "1.8.0",
   "description": "All-in-one Discord bot for design and development resources",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "deploy-commands": "ts-node src/scripts/deploy-commands.ts",
-    "clear-commands": "ts-node src/scripts/clear-commands.ts",
+    "build": "npm run build -w @sonagi-bots/shared && npm run build -w @sonagi-bots/ops-bot -w @sonagi-bots/dev-bot -w @sonagi-bots/media-bot",
+    "lint": "eslint \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\"",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "prepare": "husky"
+    "dev": "concurrently -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" -n \"OPS,MEDIA,DEV\" \"npm run dev -w @sonagi-bots/ops-bot\" \"npm run dev -w @sonagi-bots/media-bot\" \"npm run dev -w @sonagi-bots/dev-bot\"",
+    "format": "prettier --write \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\""
   },
   "keywords": [
     "discord",
@@ -47,6 +41,7 @@
     "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
+    "concurrently": "^10.0.4",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
@@ -69,5 +64,9 @@
     "*.{json,md,yml}": [
       "prettier --write"
     ]
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

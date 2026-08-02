@@ -34,7 +34,7 @@ jobs:
         run: npm run lint
 
       - name: Check Formatting (Prettier)
-        run: npx prettier --check "src/**/*.ts"
+        run: npx prettier --check "apps/*/src/**/*.ts" "packages/*/src/**/*.ts"
 
       - name: Type Check (Build)
         run: npm run build
