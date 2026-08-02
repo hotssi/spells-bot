@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "dev": "concurrently -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" -n \"OPS,MEDIA,DEV\" \"npm run dev -w @sonagi-bots/ops-bot\" \"npm run dev -w @sonagi-bots/media-bot\" \"npm run dev -w @sonagi-bots/dev-bot\""
   },
   "keywords": [
     "discord",
@@ -39,6 +40,7 @@
     "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
+    "concurrently": "^10.0.4",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
