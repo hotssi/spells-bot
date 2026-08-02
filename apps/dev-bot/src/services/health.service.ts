@@ -1,5 +1,14 @@
 export class HealthService {
-  static async checkAll(): Promise<any> {
-    return { status: 'ok' };
+  async getSystemStatus(): Promise<any> {
+    return {
+      status: 'operational',
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      services: {
+        bot: 'online',
+        database: 'connected'
+      }
+    };
   }
 }
+export const healthService = new HealthService();
