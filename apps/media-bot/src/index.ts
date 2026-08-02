@@ -55,7 +55,7 @@ async function main() {
 
     logger.info(`Registered ${commands.size} commands`);
 
-    registerReadyEvent(client);
+    registerReadyEvent(client, commands);
     registerInteractionCreateEvent(client, commands);
     registerMessageCreateEvent(client);
 
