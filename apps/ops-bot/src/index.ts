@@ -46,6 +46,7 @@ import { ledgerCommand } from './commands/notion/ledger';
 import { todoCommand } from './commands/todo/index';
 import { addTodoContextMenu } from './commands/todo/context-menu';
 import { n8nCommand } from './commands/n8n/index';
+import { infraCommand } from './commands/infra/index';
 import { helpCommand } from './commands/help/index';
 
 async function main() {
@@ -79,6 +80,7 @@ async function main() {
       [todoCommand.data.name, todoCommand],
       [addTodoContextMenu.data.name, addTodoContextMenu],
       [n8nCommand.data.name, n8nCommand],
+      [infraCommand.data.name, infraCommand],
       [helpCommand.data.name, helpCommand],
     ]);
 
