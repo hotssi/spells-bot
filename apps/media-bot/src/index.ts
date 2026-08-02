@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+dotenv.config({ path: '/home/ubuntu/sonagi-bots/.env' });
 
 import { logger, assertEnvVariable, CommandMap } from '@sonagi-bots/shared';
 import { registerReadyEvent } from './events/ready';
