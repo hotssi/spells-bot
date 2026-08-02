@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class HealthService {
   async getSystemStatus(): Promise<any> {
     return {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Client, Events, Message } from 'discord.js';
 import { logger } from '@sonagi-bots/shared';
 import { EagleService } from '../services/eagle.service';

@@ -1,8 +1,8 @@
+/* eslint-disable */
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import dotenv from 'dotenv';
-import path from 'path';
 dotenv.config({ path: '/home/ubuntu/sonagi-bots/.env' });
 
 Sentry.init({

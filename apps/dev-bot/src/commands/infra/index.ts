@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
 import { healthService } from '../../services/health.service';

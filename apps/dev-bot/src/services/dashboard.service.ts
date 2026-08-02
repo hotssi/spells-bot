@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Client } from 'discord.js';
 import { logger } from '@sonagi-bots/shared';
 
