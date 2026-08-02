@@ -16,9 +16,10 @@ async function getAllWorkflows(): Promise<any[]> {
   if (!apiUrl || !apiKey) throw new Error('N8N configuration missing.');
 
   const response = await axios.get(`${apiUrl}/api/v1/workflows`, {
-    headers: { 
+    headers: {
       'X-N8N-API-KEY': apiKey,
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     },
     params: { limit: 250 },
     timeout: 10000,
@@ -50,13 +51,13 @@ export const infraCommand: Command = {
 
       // Map webhooks
       const webhookMap: Record<string, any> = {};
-      
+
       for (const wh of webhooks) {
         if (!wh.channelId) continue;
-        
+
         let category = 'ORPHAN';
         const creator = wh.owner?.username || 'Unknown';
-        
+
         if (!wh.applicationId && wh.name.includes(' #')) {
           category = 'FOLLOW';
         } else if (wh.applicationId) {
@@ -91,7 +92,7 @@ export const infraCommand: Command = {
 
       for (const [, data] of Object.entries(webhookMap)) {
         const channelMention = `<#${data.channelId}>`;
-        
+
         if (data.category === 'N8N') {
           for (const wfName of data.workflows) {
             n8nList.push(`- ⚙️ \`${wfName}\`\n  ➔ ${channelMention} (via \`${data.name}\`)`);
@@ -108,8 +109,9 @@ export const infraCommand: Command = {
       let description = '';
       if (n8nList.length > 0) description += `**✅ n8n 파이프라인**\n${n8nList.join('\n')}\n\n`;
       if (botList.length > 0) description += `**🤖 봇 스크립트**\n${botList.join('\n')}\n\n`;
-      if (followList.length > 0) description += `**📡 커뮤니티 피드**\n${followList.join('\n')}\n\n`;
-      
+      if (followList.length > 0)
+        description += `**📡 커뮤니티 피드**\n${followList.join('\n')}\n\n`;
+
       let embedColor: number = Colors.SUCCESS;
       if (orphanList.length > 0) {
         description += `**⚠️ 유령 웹훅 (정리 요망)**\n${orphanList.join('\n')}`;
@@ -122,11 +124,12 @@ export const infraCommand: Command = {
         .setTitle('🗺️ Discord 인프라 연동 명세서')
         .setDescription(description)
         .setColor(embedColor)
-        .setFooter({ text: `Auto-Mapper | 활성 워크플로우 ${activeWorkflows.length}개 · 웹훅 ${webhooks.length}개 스캔` })
+        .setFooter({
+          text: `Auto-Mapper | 활성 워크플로우 ${activeWorkflows.length}개 · 웹훅 ${webhooks.length}개 스캔`,
+        })
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
-
     } catch (error: any) {
       await interaction.editReply({
         embeds: [createErrorEmbed(`인프라 스캔 실패: ${error.message}`)],
