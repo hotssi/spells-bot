@@ -53,7 +53,9 @@ export class DashboardService {
       // 3. Find existing dashboard message or create new
       const messages = await channel.messages.fetch({ limit: 10 });
       const existingMsg = messages.find(
-        (m) => m.author.id === client.user?.id && m.embeds[0]?.title?.includes('Infrastructure Dashboard')
+        (m) =>
+          m.author.id === client.user?.id &&
+          m.embeds[0]?.title?.includes('Infrastructure Dashboard')
       );
 
       if (existingMsg) {
