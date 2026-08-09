@@ -1,12 +1,12 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
 } from 'discord.js';
 import axios from 'axios';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { DEFAULT_USER_AGENT } from '@sonagi-bots/shared';
 import POKEMON_LIST_JSON from './pokemon-list.json';
@@ -138,8 +138,8 @@ export const utilsCommand: Command = {
           const cleanSnippet = topResult.snippet.replace(/<[^>]*>?/gm, '');
           const encodedTitle = encodeURIComponent(topResult.title);
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const embed = new SonagiEmbed()
+            .setType('info')
             .setTitle(`📚 ${topResult.title}`)
             .setURL(`https://ko.wikipedia.org/wiki/${encodedTitle}`)
             .setDescription(cleanSnippet + '...')
@@ -171,8 +171,8 @@ export const utilsCommand: Command = {
           // We add timestamp to bypass caching.
           const imageUrl = `${url}${query ? '&' : '?'}t=${Date.now()}`;
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const embed = new SonagiEmbed()
+            .setType('info')
             .setTitle(query ? `📷 갤러리 - ${query}` : '📷 무작위 사진 갤러리')
             .setImage(imageUrl)
             .setFooter({ text: 'Powered by Unsplash' });
@@ -195,8 +195,8 @@ export const utilsCommand: Command = {
             timeout: 5000,
           });
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.SUCCESS)
+          const embed = new SonagiEmbed()
+            .setType('success')
             .setTitle('🍔 군침 도는 음식 사진!')
             .setImage(response.data.image)
             .setFooter({ text: 'Powered by Foodish API' });
@@ -223,8 +223,8 @@ export const utilsCommand: Command = {
             }
           );
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.SUCCESS)
+          const embed = new SonagiEmbed()
+            .setType('success')
             .setTitle('🐶 멍멍!')
             .setImage(response.data.url)
             .setFooter({ text: 'Powered by random.dog' });
@@ -250,8 +250,8 @@ export const utilsCommand: Command = {
             }
           );
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.SUCCESS)
+          const embed = new SonagiEmbed()
+            .setType('success')
             .setTitle('🐱 야옹!')
             .setImage(response.data[0].url)
             .setFooter({ text: 'Powered by The Cat API' });
@@ -283,8 +283,8 @@ export const utilsCommand: Command = {
           const imageUrl = data.sprites.other['official-artwork'].front_default;
           const types = data.types.map((t) => t.type.name).join(', ');
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const embed = new SonagiEmbed()
+            .setType('info')
             .setTitle(`Pokédex: ${data.name.toUpperCase()} (#${data.id})`)
             .addFields(
               { name: 'Type', value: types, inline: true },

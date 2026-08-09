@@ -1,20 +1,20 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { PaperclipService, PaperclipIssueResponse } from '../../services/paperclip';
 
 export function createIssueSuccessEmbed(issue: PaperclipIssueResponse) {
-  return new EmbedBuilder()
-    .setColor(Colors.SUCCESS)
+  return new SonagiEmbed()
+    .setType('success')
     .setTitle('✅ 새로운 이슈가 페이퍼클립에 등록되었습니다.')
     .setDescription(`**${issue.title}**\n\n${issue.description}`)
     .addFields(
@@ -271,8 +271,8 @@ export const paperclipCommand: Command = {
         const issues = await PaperclipService.listIssues(companyId, limit, status);
 
         if (!Array.isArray(issues) || issues.length === 0) {
-          const emptyEmbed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const emptyEmbed = new SonagiEmbed()
+            .setType('info')
             .setTitle('📋 이슈 목록')
             .setDescription('현재 등록된 이슈가 없습니다.')
             .setFooter({ text: 'Paperclip 연동' })
@@ -294,8 +294,8 @@ export const paperclipCommand: Command = {
         };
         const statusLabel = statusLabelMap[status] || '전체';
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`📋 최근 이슈 목록 [${statusLabel}] (Top ${issues.length})`)
           .setFooter({ text: 'Paperclip 연동' })
           .setTimestamp();
@@ -344,8 +344,8 @@ export const paperclipCommand: Command = {
         else if (issue.status === 'blocked') statusEmoji = '🚫';
         else if (issue.status === 'cancelled') statusEmoji = '❌';
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`${statusEmoji} ${issue.title || '제목 없음'}`)
           .setDescription(
             issue.description ? issue.description.substring(0, 4000) : '상세 내용이 없습니다.'
@@ -406,8 +406,8 @@ export const paperclipCommand: Command = {
         const displayAgentName =
           agentId === 'unassign' ? '할당 해제됨 (Unassigned)' : AGENT_NAME_MAP[agentId] || agentId;
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('✅ 이슈가 성공적으로 할당되었습니다.')
           .setDescription(`**[${issue.identifier || issue.id?.substring(0, 8)}]** ${issue.title}`)
           .addFields({ name: '담당 에이전트', value: displayAgentName, inline: true })
@@ -466,8 +466,8 @@ export const paperclipCommand: Command = {
 
         const displayStatus = statusLabelMap[issue.status] || issue.status || status;
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle(`${statusEmoji} 이슈 상태가 변경되었습니다.`)
           .setDescription(`**[${issue.identifier || issue.id?.substring(0, 8)}]** ${issue.title}`)
           .addFields({ name: '변경된 상태', value: displayStatus, inline: true })
@@ -506,8 +506,8 @@ export const paperclipCommand: Command = {
       try {
         await PaperclipService.commentOnIssue(issueId, content);
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('✅ 이슈 코멘트가 등록되었습니다.')
           .addFields(
             { name: '이슈 ID', value: issueId, inline: true },

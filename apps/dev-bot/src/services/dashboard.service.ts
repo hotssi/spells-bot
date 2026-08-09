@@ -1,5 +1,6 @@
-import { Client, EmbedBuilder, TextChannel } from 'discord.js';
-import { logger, Colors } from '@sonagi-bots/shared';
+import { Client, TextChannel } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
+import { logger } from '@sonagi-bots/shared';
 import { healthService } from './health.service';
 
 export class DashboardService {
@@ -26,9 +27,9 @@ export class DashboardService {
       });
 
       // 2. Build Embed
-      const embed = new EmbedBuilder()
+      const embed = new SonagiEmbed()
         .setTitle('📊 Sonagi Infrastructure Dashboard')
-        .setColor(health.k3s && health.n8n && health.minio ? Colors.SUCCESS : Colors.WARNING)
+        .setType(health.k3s && health.n8n && health.minio ? 'success' : 'warning')
         .setTimestamp(health.timestamp)
         .setDescription('실시간 인프라 및 마이크로서비스 상태입니다.')
         .addFields(

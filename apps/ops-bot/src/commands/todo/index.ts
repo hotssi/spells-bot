@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { n8nClient } from '../../clients/n8n.client';
 
@@ -69,8 +70,8 @@ export const todoCommand: Command = {
         user: interaction.user.tag,
       });
 
-      const embed = new EmbedBuilder()
-        .setColor(Colors.SUCCESS)
+      const embed = new SonagiEmbed()
+        .setType('success')
         .setTitle('✅ MS To Do에 할 일이 추가되었습니다.')
         .addFields({ name: '내용', value: title, inline: true });
 

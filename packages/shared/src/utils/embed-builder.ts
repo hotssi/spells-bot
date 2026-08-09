@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 
 export const Colors = {
   PRIMARY: 0x5865f2,
@@ -8,26 +8,22 @@ export const Colors = {
   INFO: 0x3498db,
 } as const;
 
-export function createErrorEmbed(message: string): EmbedBuilder {
-  return new EmbedBuilder()
-    .setColor(Colors.ERROR)
+export function createErrorEmbed(message: string): SonagiEmbed {
+  return new SonagiEmbed()
+    .setType('error')
     .setTitle('❌ Error')
     .setDescription(message)
     .setTimestamp();
 }
 
-export function createSuccessEmbed(message: string): EmbedBuilder {
-  return new EmbedBuilder()
-    .setColor(Colors.SUCCESS)
+export function createSuccessEmbed(message: string): SonagiEmbed {
+  return new SonagiEmbed()
+    .setType('success')
     .setTitle('✅ Success')
     .setDescription(message)
     .setTimestamp();
 }
 
-export function createInfoEmbed(title: string, message: string): EmbedBuilder {
-  return new EmbedBuilder()
-    .setColor(Colors.INFO)
-    .setTitle(title)
-    .setDescription(message)
-    .setTimestamp();
+export function createInfoEmbed(title: string, message: string): SonagiEmbed {
+  return new SonagiEmbed().setType('info').setTitle(title).setDescription(message).setTimestamp();
 }

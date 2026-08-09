@@ -1,3 +1,4 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   Client,
   Events,
@@ -6,14 +7,13 @@ import {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
-  EmbedBuilder,
   ChatInputCommandInteraction,
 } from 'discord.js';
 import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../services/notion';
 import { handleCommandError } from '@sonagi-bots/shared';
 import { PaperclipService } from '../services/paperclip';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { createIssueSuccessEmbed } from '../commands/paperclip/index';
 import type { CommandMap } from '@sonagi-bots/shared';
 
@@ -67,11 +67,11 @@ export function registerInteractionCreateEvent(client: Client, commands: Command
 
             const originalEmbed = interaction.message?.embeds[0];
             const embed = originalEmbed
-              ? EmbedBuilder.from(originalEmbed)
-                  .setColor(Colors.SUCCESS)
+              ? new SonagiEmbed(originalEmbed.data)
+                  .setType('success')
                   .setTitle(originalEmbed.title?.replace('⏳', '✅') || '✅ 결재 승인 완료')
-              : new EmbedBuilder()
-                  .setColor(Colors.SUCCESS)
+              : new SonagiEmbed()
+                  .setType('success')
                   .setTitle('✅ 결재 승인 완료')
                   .setDescription(`결재 ID \`${approvalId}\`가 승인되었습니다.`);
 
@@ -183,12 +183,12 @@ export function registerInteractionCreateEvent(client: Client, commands: Command
 
             const originalEmbed = interaction.message?.embeds[0];
             const embed = originalEmbed
-              ? EmbedBuilder.from(originalEmbed)
-                  .setColor(Colors.ERROR)
+              ? new SonagiEmbed(originalEmbed.data)
+                  .setType('error')
                   .setTitle(originalEmbed.title?.replace('⏳', '❌') || '❌ 결재 반려 완료')
                   .addFields({ name: '반려 사유', value: reason, inline: false })
-              : new EmbedBuilder()
-                  .setColor(Colors.WARNING)
+              : new SonagiEmbed()
+                  .setType('warning')
                   .setTitle('❌ 결재 반려 완료')
                   .setDescription(
                     `결재 ID \`${approvalId}\`가 다음 사유로 반려되었습니다:\n> ${reason}`

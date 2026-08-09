@@ -1,9 +1,10 @@
 /* eslint-disable */
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
 import { healthService } from '../../services/health.service';
 import { DashboardService } from '../../services/dashboard.service';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import axios from 'axios';
 
 const N8N_ANKI_SYNC_WEBHOOK =
@@ -39,8 +40,8 @@ export const infraCommand: Command = {
         const status = await healthService.getSystemStatus();
         const isAllHealthy = status.k3s && status.minio && status.n8n;
 
-        const embed = new EmbedBuilder()
-          .setColor(isAllHealthy ? Colors.SUCCESS : Colors.ERROR)
+        const embed = new SonagiEmbed()
+          .setType(isAllHealthy ? 'success' : 'error')
           .setTitle('🖥️ Sonagi Infrastructure Status')
           .setDescription(
             isAllHealthy
@@ -68,8 +69,8 @@ export const infraCommand: Command = {
         try {
           await axios.post(N8N_ANKI_SYNC_WEBHOOK, { source: 'spells-bot' }, { timeout: 5000 });
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.SUCCESS)
+          const embed = new SonagiEmbed()
+            .setType('success')
             .setTitle('📚 Anki Sync 시작됨')
             .setDescription(
               'llm-wiki → Anki 동기화가 백그라운드에서 시작됐습니다.\n완료까지 약 1~2분 소요됩니다.'
