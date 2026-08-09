@@ -288,4 +288,46 @@ export class NotionService {
       throw new Error('Notion API Error');
     }
   }
+
+  /**
+   * 일정 마감 기한 연장 (Snooze)
+   */
+  static async updateScheduleDate(pageId: string, newDateIsoString: string): Promise<void> {
+    const notion = this.getClient();
+    try {
+      await notion.pages.update({
+        page_id: pageId,
+        properties: {
+          Date: {
+            date: {
+              start: newDateIsoString,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      logger.error('Failed to update schedule date', error);
+      throw new Error('Notion API Error');
+    }
+  }
+
+  /**
+   * 일정 완료 처리
+   */
+  static async completeSchedule(pageId: string): Promise<void> {
+    const notion = this.getClient();
+    try {
+      await notion.pages.update({
+        page_id: pageId,
+        properties: {
+          Done: {
+            checkbox: true,
+          },
+        },
+      });
+    } catch (error) {
+      logger.error('Failed to complete schedule', error);
+      throw new Error('Notion API Error');
+    }
+  }
 }
