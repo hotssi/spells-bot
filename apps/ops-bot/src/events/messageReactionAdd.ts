@@ -130,7 +130,7 @@ export function registerMessageReactionAddEvent(client: Client): void {
 
               const extraImages = attachments.slice(1).join('\n');
               const extraContent = extraImages ? `**추가 이미지:**\n${extraImages}` : undefined;
-              
+
               await textChannel.send({ embeds: [embed], content: extraContent });
 
               await message.react('✅');
