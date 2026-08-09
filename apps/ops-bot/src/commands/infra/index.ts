@@ -1,11 +1,7 @@
-import { SonagiEmbedType } from "@sonagi/discord-ui";
+import { SonagiEmbedType } from '@sonagi/discord-ui';
 import { SonagiEmbed } from '@sonagi/discord-ui';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
-import {
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
 import { createErrorEmbed } from '@sonagi-bots/shared';
 import axios from 'axios';
@@ -113,7 +109,6 @@ export const infraCommand: Command = {
       if (followList.length > 0)
         description += `**📡 커뮤니티 피드**\n${followList.join('\n')}\n\n`;
 
-      
       let embedColor: SonagiEmbedType = 'success';
       if (orphanList.length > 0) {
         description += `**⚠️ 유령 웹훅 (정리 요망)**\n${orphanList.join('\n')}`;

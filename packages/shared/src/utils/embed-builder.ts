@@ -25,9 +25,5 @@ export function createSuccessEmbed(message: string): SonagiEmbed {
 }
 
 export function createInfoEmbed(title: string, message: string): SonagiEmbed {
-  return new SonagiEmbed()
-    .setType('info')
-    .setTitle(title)
-    .setDescription(message)
-    .setTimestamp();
+  return new SonagiEmbed().setType('info').setTitle(title).setDescription(message).setTimestamp();
 }

@@ -1,10 +1,6 @@
 import { SonagiEmbed } from '@sonagi/discord-ui';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
-import {
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-} from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
 import { createErrorEmbed } from '@sonagi-bots/shared';
 import { n8nClient } from '../../clients/n8n.client';
@@ -126,9 +122,7 @@ export const n8nCommand: Command = {
           return;
         }
 
-        const embed = new SonagiEmbed()
-          .setType('info')
-          .setTitle('📋 최근 n8n 실행 기록 (5건)');
+        const embed = new SonagiEmbed().setType('info').setTitle('📋 최근 n8n 실행 기록 (5건)');
         let description = '';
         executions.forEach((exec: any, index) => {
           const statusIcon =

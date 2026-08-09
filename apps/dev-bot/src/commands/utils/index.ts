@@ -3,7 +3,7 @@ import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  } from 'discord.js';
+} from 'discord.js';
 import axios from 'axios';
 import type { Command } from '@sonagi-bots/shared';
 import { createErrorEmbed } from '@sonagi-bots/shared';
