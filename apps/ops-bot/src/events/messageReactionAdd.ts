@@ -6,10 +6,12 @@ import {
   User,
   PartialUser,
 } from 'discord.js';
+import axios from 'axios';
 import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../services/notion';
 
 const WEB_CLIP_CHANNEL_ID = process.env.WEB_CLIP_CHANNEL_ID || '1519250071764336650';
+const GALLERY_SERVER_URL = process.env.GALLERY_SERVER_URL || 'http://localhost:8000';
 const DESIGN_CLIP_CHANNEL_ID = process.env.DESIGN_CLIP_CHANNEL_ID || '1528620974948225095';
 
 export function registerMessageReactionAddEvent(client: Client): void {
@@ -132,6 +134,25 @@ export function registerMessageReactionAddEvent(client: Client): void {
               const extraContent = extraImages ? `**추가 이미지:**\n${extraImages}` : undefined;
 
               await textChannel.send({ embeds: [embed], content: extraContent });
+
+              // ----------------------------------------------------
+              // Eagle Gallery 서버로 원본 이미지 및 메타데이터 전송
+              // ----------------------------------------------------
+              if (attachments.length > 0) {
+                try {
+                  const payload = {
+                    imageUrl: attachments[0],
+                    author: authorName,
+                    content: content,
+                    messageUrl: messageUrl,
+                    tags: ['discord', 'design-clip'],
+                  };
+                  await axios.post(`${GALLERY_SERVER_URL}/api/import-url`, payload);
+                  logger.info(`Successfully sent image to Gallery Server: ${attachments[0]}`);
+                } catch (apiError) {
+                  logger.error('Failed to send image to Gallery Server', apiError);
+                }
+              }
 
               await message.react('✅');
             }
