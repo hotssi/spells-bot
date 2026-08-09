@@ -1,12 +1,13 @@
+import { SonagiEmbedType } from "@sonagi/discord-ui";
+import { SonagiEmbed } from '@sonagi/discord-ui';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   PermissionFlagsBits,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import axios from 'axios';
 
 // API call to fetch all workflows
@@ -112,18 +113,19 @@ export const infraCommand: Command = {
       if (followList.length > 0)
         description += `**📡 커뮤니티 피드**\n${followList.join('\n')}\n\n`;
 
-      let embedColor: number = Colors.SUCCESS;
+      
+      let embedColor: SonagiEmbedType = 'success';
       if (orphanList.length > 0) {
         description += `**⚠️ 유령 웹훅 (정리 요망)**\n${orphanList.join('\n')}`;
-        embedColor = Colors.ERROR;
+        embedColor = 'error';
       } else {
         description += `**✨ 유령 웹훅 0개 — 클린!**`;
       }
 
-      const embed = new EmbedBuilder()
+      const embed = new SonagiEmbed()
         .setTitle('🗺️ Discord 인프라 연동 명세서')
         .setDescription(description)
-        .setColor(embedColor)
+        .setType(embedColor)
         .setFooter({
           text: `Auto-Mapper | 활성 워크플로우 ${activeWorkflows.length}개 · 웹훅 ${webhooks.length}개 스캔`,
         })

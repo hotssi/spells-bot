@@ -1,7 +1,7 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   GuildMember,
   ActionRowBuilder,
   StringSelectMenuBuilder,
@@ -17,7 +17,7 @@ import Parser from 'rss-parser';
 import { Track, GuildQueue } from 'discord-player';
 import { player } from '../../index';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 
 // Interfaces for API responses
@@ -196,8 +196,8 @@ export const radioCommand: Command = {
       const queue = player.nodes.get(guildId);
       if (queue && queue.isPlaying()) {
         queue.delete();
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('📻 라디오 종료')
           .setDescription('재생을 중지하고 음성 채널에서 나갔습니다.');
         await interaction.reply({ embeds: [embed] });
@@ -260,8 +260,8 @@ export const radioCommand: Command = {
           nodeOptions: { metadata: interaction, selfDeaf: false, leaveOnEmpty: true },
         });
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle(`📻 ${channelName} 재생 시작`)
           .setDescription(`음성 채널 **${voiceChannel.name}**에서 실시간 라디오를 재생합니다.`);
         const msg = await interaction.editReply({
@@ -368,8 +368,8 @@ export const radioCommand: Command = {
           return [row1, row2];
         };
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.PRIMARY)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`🎙️ ${podcastName} 다시듣기`)
           .setDescription(
             `총 **${validEpisodes.length}개**의 에피소드가 있습니다.\n아래 메뉴에서 다시 듣고 싶은 에피소드를 선택해 주세요!`
@@ -435,8 +435,8 @@ export const radioCommand: Command = {
                   nodeOptions: { metadata: interaction, selfDeaf: false, leaveOnEmpty: true },
                 });
 
-                const playEmbed = new EmbedBuilder()
-                  .setColor(Colors.SUCCESS)
+                const playEmbed = new SonagiEmbed()
+                  .setType('success')
                   .setTitle(`🎙️ 재생 시작: ${episode?.title || podcastName}`)
                   .setDescription(
                     `음성 채널 **${voiceChannel.name}**에서 다시듣기를 재생합니다.\n\n*(노래가 나오면 \`/radio song [제목]\` 명령어로 원곡을 튼 후 이어서 들을 수 있습니다!)*`
@@ -529,8 +529,8 @@ export const radioCommand: Command = {
           // Skip the current track to start the song immediately
           queue.node.skip();
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.SUCCESS)
+          const embed = new SonagiEmbed()
+            .setType('success')
             .setTitle(`🎶 팟캐스트 일시정지 & 원곡 재생`)
             .setDescription(
               `**${songTrack.title}** 재생을 시작합니다!\n원곡이 끝나면 아까 듣던 팟캐스트로 자동 복귀합니다.`

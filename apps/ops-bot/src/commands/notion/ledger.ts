@@ -1,11 +1,11 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   AutocompleteInteraction,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../../services/notion';
 
@@ -152,8 +152,8 @@ export const ledgerCommand: Command = {
           if (acc) accountName = acc.name;
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(type === 'Expense' ? Colors.WARNING : Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType(type === 'Expense' ? 'warning' : 'success')
           .setTitle(`✅ ${type === 'Expense' ? '지출' : '수입'} 내역이 등록되었습니다.`)
           .addFields(
             { name: '사용처', value: name, inline: true },

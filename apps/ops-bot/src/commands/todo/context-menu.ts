@@ -1,11 +1,11 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
-  EmbedBuilder,
   MessageContextMenuCommandInteraction,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { n8nClient } from '../../clients/n8n.client';
 
@@ -59,8 +59,8 @@ export const addTodoContextMenu: Command = {
         url: targetMessage.url, // 원래 메시지 링크
       });
 
-      const embed = new EmbedBuilder()
-        .setColor(Colors.SUCCESS)
+      const embed = new SonagiEmbed()
+        .setType('success')
         .setTitle('✅ MS To Do에 할 일이 추가되었습니다.')
         .setDescription(`[원본 메시지 보러가기](${targetMessage.url})`)
         .addFields({ name: '내용', value: content })

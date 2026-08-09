@@ -1,13 +1,13 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { PaperclipService } from '../../services/paperclip';
 
@@ -83,8 +83,8 @@ export const paperclipApprovalCommand: Command = {
         const approvals = await PaperclipService.listApprovals(companyId, 'pending');
 
         if (!Array.isArray(approvals) || approvals.length === 0) {
-          const emptyEmbed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const emptyEmbed = new SonagiEmbed()
+            .setType('info')
             .setTitle('📋 결재 대기 목록')
             .setDescription('현재 대기 중인 결재가 없습니다.')
             .setFooter({ text: 'Paperclip 연동' })
@@ -106,8 +106,8 @@ export const paperclipApprovalCommand: Command = {
           const title = approval.title || '제목 없음';
           const desc = approval.description || '상세 내용이 없습니다.';
 
-          const embed = new EmbedBuilder()
-            .setColor(Colors.WARNING)
+          const embed = new SonagiEmbed()
+            .setType('warning')
             .setTitle(`⏳ [결재 요청] ${title}`)
             .setDescription(desc.length > 2000 ? desc.substring(0, 1997) + '...' : desc)
             .addFields({ name: '결재 ID', value: `\`${approvalId}\``, inline: true })
@@ -156,8 +156,8 @@ export const paperclipApprovalCommand: Command = {
       try {
         await PaperclipService.approve(approvalId, comment);
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('✅ 결재가 승인되었습니다.')
           .addFields(
             { name: '결재 ID', value: approvalId, inline: true },
@@ -192,8 +192,8 @@ export const paperclipApprovalCommand: Command = {
       try {
         await PaperclipService.reject(approvalId, comment);
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.WARNING)
+        const embed = new SonagiEmbed()
+          .setType('warning')
           .setTitle('❌ 결재가 거절되었습니다.')
           .addFields(
             { name: '결재 ID', value: approvalId, inline: true },

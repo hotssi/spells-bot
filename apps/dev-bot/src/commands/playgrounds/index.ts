@@ -1,14 +1,14 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
 } from 'discord.js';
 import axios, { AxiosError } from 'axios';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 
 interface SandboxApiResponse {
@@ -86,8 +86,8 @@ export const playCommand: Command = {
           const data = response.data;
 
           if (data.status === 'success' && data.sandbox_url && data.preview_url) {
-            const embed = new EmbedBuilder()
-              .setColor(Colors.SUCCESS)
+            const embed = new SonagiEmbed()
+              .setType('success')
               .setTitle('🎡 Sonagi Playgrounds Sandbox')
               .setDescription(
                 `\`${examplePath}\` 예제 코드가 라이브 환경에 성공적으로 세팅되었습니다!`
@@ -161,8 +161,8 @@ export const playCommand: Command = {
             const truncatedOutput =
               output.length > 2000 ? output.substring(0, 1997) + '...' : output;
 
-            const embed = new EmbedBuilder()
-              .setColor(data.run.code === 0 ? Colors.SUCCESS : Colors.ERROR)
+            const embed = new SonagiEmbed()
+              .setType(data.run.code === 0 ? 'success' : 'error')
               .setTitle(`🖥️ Code Execution Result (${data.language} ${data.version})`)
               .setDescription(`\`\`\`\n${truncatedOutput}\n\`\`\``)
               .setTimestamp();

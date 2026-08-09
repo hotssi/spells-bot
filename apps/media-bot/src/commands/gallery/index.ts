@@ -1,7 +1,8 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
 import { galleryService } from '../../services/gallery.service';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 
 export const galleryCommand: Command = {
   data: new SlashCommandBuilder()
@@ -44,8 +45,8 @@ export const galleryCommand: Command = {
           }
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.PRIMARY)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`🎨 Gallery: ${image.name}`)
           .setImage(image.url)
           .addFields({ name: 'Tags', value: tagsValue })

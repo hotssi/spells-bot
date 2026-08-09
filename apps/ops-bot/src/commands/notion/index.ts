@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { NotionService } from '../../services/notion';
 
@@ -69,8 +70,8 @@ export const scheduleCommand: Command = {
         const schedules = await NotionService.getTodaySchedules();
 
         if (schedules.length === 0) {
-          const emptyEmbed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const emptyEmbed = new SonagiEmbed()
+            .setType('info')
             .setTitle('📅 오늘의 일정')
             .setDescription('오늘은 예정된 일정이 없습니다. 푹 쉬세요! ☕')
             .setFooter({ text: 'Notion 연동' })
@@ -80,8 +81,8 @@ export const scheduleCommand: Command = {
           return;
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle(`📅 오늘의 일정 (총 ${schedules.length}건)`)
           .setFooter({ text: 'Notion 연동' })
           .setTimestamp();
@@ -134,8 +135,8 @@ export const scheduleCommand: Command = {
       try {
         await NotionService.addSchedule(title, dateString, category, location);
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('✅ 새로운 일정이 추가되었습니다.')
           .addFields(
             { name: '제목', value: title, inline: true },

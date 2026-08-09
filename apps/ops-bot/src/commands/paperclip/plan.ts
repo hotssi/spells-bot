@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { PaperclipService } from '../../services/paperclip';
 
@@ -76,8 +77,8 @@ export const paperclipPlanCommand: Command = {
         const issues = await PaperclipService.listInReviewIssues(companyId);
 
         if (!Array.isArray(issues) || issues.length === 0) {
-          const emptyEmbed = new EmbedBuilder()
-            .setColor(Colors.INFO)
+          const emptyEmbed = new SonagiEmbed()
+            .setType('info')
             .setTitle('📋 계획(Plan) 리뷰 대기 목록')
             .setDescription('현재 리뷰 대기 중인 계획이 없습니다.')
             .setFooter({ text: 'Paperclip 연동' })
@@ -87,8 +88,8 @@ export const paperclipPlanCommand: Command = {
           return;
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`📋 계획(Plan) 리뷰 대기 목록 (총 ${issues.length}건)`)
           .setFooter({ text: 'Paperclip 연동' })
           .setTimestamp();
@@ -156,8 +157,8 @@ export const paperclipPlanCommand: Command = {
           }
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle('✅ 계획이 승인되었습니다.')
           .setDescription(`승인 처리가 완료되었습니다.${heartbeatMsg}`)
           .addFields({ name: '이슈 ID', value: issueId, inline: true })
@@ -216,8 +217,8 @@ export const paperclipPlanCommand: Command = {
           }
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.WARNING)
+        const embed = new SonagiEmbed()
+          .setType('warning')
           .setTitle('❌ 계획이 거절되었습니다.')
           .setDescription(`거절 처리 및 피드백 전송이 완료되었습니다.${heartbeatMsg}`)
           .addFields(

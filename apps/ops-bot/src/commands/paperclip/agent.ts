@@ -1,6 +1,7 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { logger } from '@sonagi-bots/shared';
 import { PaperclipService } from '../../services/paperclip';
 
@@ -52,8 +53,8 @@ export const paperclipAgentCommand: Command = {
 
         const displayAgentName = AGENTS[agentId as keyof typeof AGENTS] || agentId;
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle(`⏰ 에이전트를 강제로 깨웠습니다!`)
           .setDescription(
             `**${displayAgentName}** 에이전트에게 즉시 작업을 확인하라는 신호(Heartbeat)를 보냈습니다. 에이전트가 곧 응답할 것입니다.`

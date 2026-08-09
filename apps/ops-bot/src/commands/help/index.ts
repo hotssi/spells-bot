@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors } from '@sonagi-bots/shared';
 
 export const helpCommand: Command = {
   data: new SlashCommandBuilder()
@@ -8,8 +8,8 @@ export const helpCommand: Command = {
     .setDescription('Sonagi Ops 봇에서 사용할 수 있는 명령어 목록과 사용법을 보여줍니다.'),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const embed = new EmbedBuilder()
-      .setColor(Colors.SUCCESS)
+    const embed = new SonagiEmbed()
+      .setType('success')
       .setTitle('👔 Sonagi Ops 명령어 가이드')
       .setDescription('생산성, AI 협업, 워크플로우 관리를 지원하는 Ops 봇의 명령어 목록입니다.')
       .setThumbnail(interaction.client.user?.displayAvatarURL() || null)

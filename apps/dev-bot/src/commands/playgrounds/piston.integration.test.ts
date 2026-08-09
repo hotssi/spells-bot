@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { describe, it, expect, vi, beforeAll, afterAll, Mock } from 'vitest';
 import { playCommand } from './index';
-import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 
 describe.runIf(process.env.CI || process.env.RUN_INTEGRATION_TESTS)(
   'Piston Engine Integration Test',

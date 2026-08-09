@@ -1,7 +1,8 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { SonagiEmbed } from '@sonagi/discord-ui';
 import type { Command } from '@sonagi-bots/shared';
 import { cdnService } from '../../services/cdn.service';
-import { Colors, createErrorEmbed, createSuccessEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed, createSuccessEmbed } from '@sonagi-bots/shared';
 
 export const cdnCommand: Command = {
   data: new SlashCommandBuilder()
@@ -61,8 +62,8 @@ export const cdnCommand: Command = {
         await interaction.deferReply();
         const stats = await cdnService.getStats();
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle('📊 MinIO Storage Statistics')
           .addFields(
             { name: 'Total Size', value: stats.size, inline: true },

@@ -1,12 +1,12 @@
+import { SonagiEmbed } from '@sonagi/discord-ui';
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  EmbedBuilder,
   PermissionFlagsBits,
 } from 'discord.js';
 import type { Command } from '@sonagi-bots/shared';
-import { Colors, createErrorEmbed } from '@sonagi-bots/shared';
+import { createErrorEmbed } from '@sonagi-bots/shared';
 import { n8nClient } from '../../clients/n8n.client';
 
 export const n8nCommand: Command = {
@@ -74,14 +74,14 @@ export const n8nCommand: Command = {
       await interaction.deferReply();
       const isHealthy = await n8nClient.ping();
 
-      const embed = new EmbedBuilder()
+      const embed = new SonagiEmbed()
         .setTitle('🛠️ n8n 서버 상태')
         .setDescription(
           isHealthy
             ? 'n8n 서버가 **정상적으로 동작 중**입니다. ✅'
             : 'n8n 서버와 연결할 수 없습니다. ❌'
         )
-        .setColor(isHealthy ? Colors.SUCCESS : Colors.ERROR)
+        .setType(isHealthy ? 'success' : 'error')
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
@@ -103,12 +103,12 @@ export const n8nCommand: Command = {
       await interaction.deferReply();
       try {
         const responseData = await n8nClient.triggerWebhook(url, payload);
-        const embed = new EmbedBuilder()
+        const embed = new SonagiEmbed()
           .setTitle('✅ n8n Webhook 실행 성공')
           .setDescription(
             `\`\`\`json\n${JSON.stringify(responseData, null, 2).substring(0, 2000)}\n\`\`\``
           )
-          .setColor(Colors.SUCCESS);
+          .setType('success');
         await interaction.editReply({ embeds: [embed] });
       } catch (error: any) {
         await interaction.editReply({
@@ -121,13 +121,13 @@ export const n8nCommand: Command = {
         const executions = await n8nClient.getRecentExecutions(5);
         if (!executions || executions.length === 0) {
           await interaction.editReply({
-            embeds: [new EmbedBuilder().setTitle('📋 기록 없음').setColor(Colors.INFO)],
+            embeds: [new SonagiEmbed().setTitle('📋 기록 없음').setType('info')],
           });
           return;
         }
 
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle('📋 최근 n8n 실행 기록 (5건)');
         let description = '';
         executions.forEach((exec: any, index) => {
@@ -149,8 +149,8 @@ export const n8nCommand: Command = {
       const tag = interaction.options.getString('태그');
       try {
         const workflows = await n8nClient.getWorkflows(tag || undefined);
-        const embed = new EmbedBuilder()
-          .setColor(Colors.INFO)
+        const embed = new SonagiEmbed()
+          .setType('info')
           .setTitle(`📋 n8n 워크플로우 목록 ${tag ? `(태그: ${tag})` : ''}`);
 
         let description = '';
@@ -176,8 +176,8 @@ export const n8nCommand: Command = {
 
       try {
         await n8nClient.setWorkflowStatus(id, activate);
-        const embed = new EmbedBuilder()
-          .setColor(Colors.SUCCESS)
+        const embed = new SonagiEmbed()
+          .setType('success')
           .setTitle(`✅ 워크플로우 제어 완료`)
           .setDescription(
             `워크플로우(\`${id}\`)를 성공적으로 **${activate ? '활성화(ON)' : '비활성화(OFF)'}** 했습니다.`
