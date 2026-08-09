@@ -83,58 +83,73 @@ export function registerInteractionCreateEvent(client: Client, commands: Command
               ephemeral: true,
             });
           }
-        
         } else if (customId.startsWith('snooze_1h_')) {
           const pageId = customId.replace('snooze_1h_', '');
           try {
             await interaction.deferUpdate();
             // Get original message content or embed to update it
             const originalContent = interaction.message.content;
-            
+
             // Calculate new date (1 hour from now)
-            const kstOffset = 9 * 60 * 60 * 1000;
-            const newDate = new Date(Date.now() + 60 * 60 * 1000 + kstOffset);
             
+
             // Format to ISO without Z, e.g., "2026-08-09T20:45:00+09:00"
             // Wait, Notion accepts standard ISO string. We can just pass the original UTC time and it handles it!
             // Actually let's just send the exact UTC string which Notion parses easily:
             const newDateString = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-            
+
             await NotionService.updateScheduleDate(pageId, newDateString);
-            
-            await interaction.editReply({ content: originalContent + '\n\n✅ **마감 시간을 1시간 뒤로 연기했습니다!**', components: [] });
+
+            await interaction.editReply({
+              content: originalContent + '\n\n✅ **마감 시간을 1시간 뒤로 연기했습니다!**',
+              components: [],
+            });
           } catch (error) {
             logger.error('Failed to snooze 1h', error);
-            await interaction.followUp({ content: '❌ 스누즈 처리 중 오류가 발생했습니다.', ephemeral: true });
+            await interaction.followUp({
+              content: '❌ 스누즈 처리 중 오류가 발생했습니다.',
+              ephemeral: true,
+            });
           }
         } else if (customId.startsWith('snooze_1d_')) {
           const pageId = customId.replace('snooze_1d_', '');
           try {
             await interaction.deferUpdate();
             const originalContent = interaction.message.content;
-            
+
             const newDateString = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
             await NotionService.updateScheduleDate(pageId, newDateString);
-            
-            await interaction.editReply({ content: originalContent + '\n\n✅ **마감 시간을 내일로 연기했습니다!**', components: [] });
+
+            await interaction.editReply({
+              content: originalContent + '\n\n✅ **마감 시간을 내일로 연기했습니다!**',
+              components: [],
+            });
           } catch (error) {
             logger.error('Failed to snooze 1d', error);
-            await interaction.followUp({ content: '❌ 스누즈 처리 중 오류가 발생했습니다.', ephemeral: true });
+            await interaction.followUp({
+              content: '❌ 스누즈 처리 중 오류가 발생했습니다.',
+              ephemeral: true,
+            });
           }
         } else if (customId.startsWith('complete_task_')) {
           const pageId = customId.replace('complete_task_', '');
           try {
             await interaction.deferUpdate();
             const originalContent = interaction.message.content;
-            
+
             await NotionService.completeSchedule(pageId);
-            
-            await interaction.editReply({ content: originalContent + '\n\n🎉 **완료 처리되었습니다! 고생하셨습니다.**', components: [] });
+
+            await interaction.editReply({
+              content: originalContent + '\n\n🎉 **완료 처리되었습니다! 고생하셨습니다.**',
+              components: [],
+            });
           } catch (error) {
             logger.error('Failed to complete schedule via button', error);
-            await interaction.followUp({ content: '❌ 완료 처리 중 오류가 발생했습니다.', ephemeral: true });
+            await interaction.followUp({
+              content: '❌ 완료 처리 중 오류가 발생했습니다.',
+              ephemeral: true,
+            });
           }
-
         } else if (customId.startsWith('reject_init_')) {
           const approvalId = customId.replace('reject_init_', '');
 
