@@ -35,6 +35,7 @@ import { registerReadyEvent } from './events/ready';
 import { registerInteractionCreateEvent } from './events/interactionCreate';
 import { registerMessageCreateEvent } from './events/messageCreate';
 import { registerMessageReactionAddEvent } from './events/messageReactionAdd';
+import { initScheduler } from './services/scheduler';
 
 // Import commands
 import { paperclipCommand } from './commands/paperclip/index';
@@ -90,6 +91,9 @@ async function main() {
     registerInteractionCreateEvent(client, commands);
     registerMessageCreateEvent(client);
     registerMessageReactionAddEvent(client);
+
+    // Start Internal Scheduler
+    initScheduler(client);
 
     await client.login(token);
 
