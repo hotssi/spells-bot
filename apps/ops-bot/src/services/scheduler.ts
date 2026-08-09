@@ -1,12 +1,5 @@
 import cron from 'node-cron';
-import {
-  Client,
-  
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  TextChannel,
-} from 'discord.js';
+import { Client, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } from 'discord.js';
 import { NotionService } from './notion';
 import { logger } from '@sonagi-bots/shared';
 import axios from 'axios';

@@ -91,7 +91,6 @@ export function registerInteractionCreateEvent(client: Client, commands: Command
             const originalContent = interaction.message.content;
 
             // Calculate new date (1 hour from now)
-            
 
             // Format to ISO without Z, e.g., "2026-08-09T20:45:00+09:00"
             // Wait, Notion accepts standard ISO string. We can just pass the original UTC time and it handles it!
