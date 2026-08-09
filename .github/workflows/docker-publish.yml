@@ -7,11 +7,51 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  BASE_IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      ops: ${{ steps.filter.outputs.ops }}
+      dev: ${{ steps.filter.outputs.dev }}
+      media: ${{ steps.filter.outputs.media }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ops:
+              - 'apps/ops-bot/**'
+            dev:
+              - 'apps/dev-bot/**'
+            media:
+              - 'apps/media-bot/**'
+            shared:
+              - 'packages/shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'Dockerfile'
+              - '.github/workflows/docker-publish.yml'
+
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [ops-bot, dev-bot, media-bot]
+        include:
+          - app: ops-bot
+            trigger: ops
+          - app: dev-bot
+            trigger: dev
+          - app: media-bot
+            trigger: media
+
+    if: ${{ needs.changes.outputs[matrix.trigger] == 'true' || needs.changes.outputs.shared == 'true' || github.event_name == 'workflow_dispatch' }}
+
     permissions:
       contents: read
       packages: write
@@ -20,7 +60,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up Docker Buildx (required for caching)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -35,7 +74,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}/${{ matrix.app }}
           tags: |
             type=raw,value=main,enable={{is_default_branch}}
             type=sha,format=short
@@ -44,11 +83,12 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          target: ${{ matrix.app }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
 
       - name: Update Infrastructure Repository (GitOps)
         if: github.ref == 'refs/heads/main'
@@ -58,7 +98,6 @@ jobs:
         run: |
           if [ -z "$GH_TOKEN" ]; then
             echo "❌ Error: PAT_TOKEN is not set in GitHub Secrets."
-            echo "Please create a Personal Access Token with repo scope and add it as PAT_TOKEN."
             exit 1
           fi
 
@@ -66,27 +105,22 @@ jobs:
           git clone https://${GH_TOKEN}@github.com/${INFRA_REPO}.git infra-repo
           cd infra-repo
 
-          # Get short SHA of the current build (7 characters to match Docker metadata)
           SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
-          NEW_IMAGE="ghcr.io/${{ env.IMAGE_NAME }}:sha-${SHORT_SHA}"
+          NEW_IMAGE="ghcr.io/${{ env.BASE_IMAGE_NAME }}/${{ matrix.app }}:sha-${SHORT_SHA}"
 
           echo "📝 Updating manifest to use image: ${NEW_IMAGE}"
           MANIFEST_PATH="kubernetes/sonagi-bots/02-deployment.yaml"
 
-          # Replace the image line using sed
-          sed -i "s|image: ghcr.io/mindulle/sonagi-bots:.*|image: ${NEW_IMAGE}|g" $MANIFEST_PATH
+          sed -i "/name: ${{ matrix.app == 'ops-bot' && 'ops-bot' || matrix.app == 'dev-bot' && 'dev-bot' || 'media-bot' }}/{n;s|image: .*|image: ${NEW_IMAGE}|}" $MANIFEST_PATH
 
-          # Commit and push
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add $MANIFEST_PATH
 
-          # Only push if there are changes
           if git diff --staged --quiet; then
-            echo "✅ No changes to commit. Image is already up to date."
+            echo "✅ No changes to commit."
           else
-            git commit -m "chore(sonagi-bots): auto-update image to sha-${SHORT_SHA} [skip ci]"
-            echo "🚀 Pushing changes to ${INFRA_REPO}..."
+            git commit -m "chore(${{ matrix.app }}): auto-update image to sha-${SHORT_SHA} [skip ci]"
+            git pull --rebase origin main || true
             git push origin main
-            echo "🎉 Manifest updated successfully! ArgoCD will sync shortly."
           fi

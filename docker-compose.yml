@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: ops-bot
     container_name: sonagi-ops-bot
     restart: unless-stopped
     env_file:
@@ -12,7 +13,6 @@ services:
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
-      - APP_NAME=ops-bot
     mem_limit: 512m
     mem_reservation: 256m
     cpus: 0.5
@@ -28,6 +28,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: media-bot
     container_name: sonagi-media-bot
     restart: unless-stopped
     env_file:
@@ -35,7 +36,6 @@ services:
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
-      - APP_NAME=media-bot
       - LAVALINK_URL=lavalink:2333
       - LAVALINK_PASSWORD=youshallnotpass
       - LAVALINK_SECURE=false
@@ -56,6 +56,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: dev-bot
     container_name: sonagi-dev-bot
     restart: unless-stopped
     env_file:
@@ -63,7 +64,6 @@ services:
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
-      - APP_NAME=dev-bot
     mem_limit: 512m
     mem_reservation: 256m
     cpus: 0.5
