@@ -1,7 +1,6 @@
-import { Client, TextChannel, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } from 'discord.js';
+import { Client, TextChannel, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import { logger } from '@sonagi-bots/shared';
 import { healthService } from './health.service';
-import { SonagiEmbed } from '@sonagi/discord-ui';
 import axios from 'axios';
 
 export class DashboardService {
@@ -49,8 +48,8 @@ export class DashboardService {
       }
 
       const files = [];
-      const embed = new SonagiEmbed()
-        .setType('info')
+      const embed = new EmbedBuilder()
+        .setColor(0x0099ff)
         .setTitle('📊 **Sonagi Infrastructure Dashboard**')
         .setDescription('실시간 인프라 및 마이크로서비스 대시보드 스냅샷입니다.')
         .setTimestamp();
@@ -62,8 +61,10 @@ export class DashboardService {
       } else {
         // 스크린샷 획득 실패 시, 기존 텍스트(Health) 상태라도 임베드에 덧붙임
         const health = await healthService.getSystemStatus().catch(() => ({ minio: false, n8n: false, k3s: false }));
-        embed.addMetricField('🖥️ Core Infra', `K3s: ${health.k3s ? '🟢' : '🔴'} | MinIO: ${health.minio ? '🟢' : '🔴'}`, false);
-        embed.addMetricField('🤖 Automation', `n8n: ${health.n8n ? '🟢' : '🔴'}`, false);
+        embed.addFields(
+          { name: '🖥️ Core Infra', value: `K3s: ${health.k3s ? '🟢' : '🔴'} | MinIO: ${health.minio ? '🟢' : '🔴'}`, inline: false },
+          { name: '🤖 Automation', value: `n8n: ${health.n8n ? '🟢' : '🔴'}`, inline: false }
+        );
       }
 
       // 2. ActionRow Button (Deep Dive)
