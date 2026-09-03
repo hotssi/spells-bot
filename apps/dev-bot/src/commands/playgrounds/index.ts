@@ -64,8 +64,8 @@ async function fetchPlaygroundPaths() {
           (item.path.endsWith('.ipynb') || item.path.endsWith('package.json'))
       )
       .map((item: any) => {
-        if (item.path.endsWith('.ipynb')) return item.path;
-        return item.path.replace('/package.json', '');
+        if (item.path.endsWith('.ipynb')) return item.path.replace(/^examples\//, '');
+        return item.path.replace('/package.json', '').replace('^examples/', '');
       });
 
     cachedPaths = paths;
