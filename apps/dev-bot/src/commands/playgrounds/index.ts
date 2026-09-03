@@ -5,6 +5,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  AutocompleteInteraction,
 } from 'discord.js';
 import axios, { AxiosError } from 'axios';
 import type { Command } from '@sonagi-bots/shared';
@@ -37,6 +38,45 @@ interface ErrorResponseData {
   message?: string;
 }
 
+// GitHub 트리 캐싱 (API Rate Limit 방지)
+let cachedPaths: string[] = [];
+let cacheTimestamp = 0;
+
+async function fetchPlaygroundPaths() {
+  const now = Date.now();
+  // 5분 캐시
+  if (cachedPaths.length > 0 && now - cacheTimestamp < 5 * 60 * 1000) {
+    return cachedPaths;
+  }
+  try {
+    const res = await axios.get(
+      'https://api.github.com/repos/mindulle/sonagi-playgrounds/git/trees/main?recursive=1',
+      {
+        timeout: 5000,
+      }
+    );
+
+    // .ipynb 파일이거나 package.json이 있는 폴더(JS/React) 추출
+    const paths = res.data.tree
+      .filter(
+        (item: any) =>
+          item.type === 'blob' &&
+          (item.path.endsWith('.ipynb') || item.path.endsWith('package.json'))
+      )
+      .map((item: any) => {
+        if (item.path.endsWith('.ipynb')) return item.path;
+        return item.path.replace('/package.json', '');
+      });
+
+    cachedPaths = paths;
+    cacheTimestamp = now;
+    return cachedPaths;
+  } catch (err) {
+    logger.error('Failed to fetch tree from GitHub for autocomplete', err);
+    return cachedPaths;
+  }
+}
+
 export const playCommand: Command = {
   data: new SlashCommandBuilder()
     .setName('play')
@@ -44,12 +84,13 @@ export const playCommand: Command = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName('sandbox')
-        .setDescription('GitHub의 예제 코드를 CodeSandbox 라이브 환경으로 띄웁니다.')
+        .setDescription('GitHub의 예제 코드를 CodeSandbox 혹은 JupyterLite 환경으로 띄웁니다.')
         .addStringOption((option) =>
           option
             .setName('path')
-            .setDescription('실행할 예제의 경로 (예: Vanilla/Stateful/Animation/alternating-text)')
+            .setDescription('실행할 예제의 경로 (자동완성 지원)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand((subcommand) =>
@@ -67,6 +108,18 @@ export const playCommand: Command = {
         )
     ),
 
+  async autocomplete(interaction: AutocompleteInteraction) {
+    const focusedValue = interaction.options.getFocused();
+    const paths = await fetchPlaygroundPaths();
+
+    // 필터링 및 최대 25개 반환 (디스코드 API 제한)
+    const filtered = paths
+      .filter((choice) => choice.toLowerCase().includes(focusedValue.toLowerCase()))
+      .slice(0, 25);
+
+    await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
+  },
+
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
 
@@ -76,6 +129,32 @@ export const playCommand: Command = {
         await interaction.deferReply();
 
         try {
+          // 파이썬 노트북 분기 처리
+          if (examplePath.endsWith('.ipynb')) {
+            const jupyterDomain =
+              process.env.JUPYTERLITE_DOMAIN || 'https://mindulle.github.io/sonagi-playgrounds';
+            const jupyterUrl = `${jupyterDomain}/lab/index.html?path=${examplePath}`;
+
+            const embed = new EmbedBuilder()
+              .setColor(Colors.SUCCESS)
+              .setTitle('🐍 JupyterLite 샌드박스')
+              .setDescription(
+                `\`${examplePath}\` 파이썬 노트북이 브라우저 실행 환경(JupyterLite)으로 준비되었습니다!`
+              )
+              .setTimestamp();
+
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+              new ButtonBuilder()
+                .setLabel('Open in JupyterLite')
+                .setStyle(ButtonStyle.Link)
+                .setURL(jupyterUrl)
+            );
+
+            await interaction.editReply({ embeds: [embed], components: [row] });
+            return;
+          }
+
+          // 기존 JS/React CodeSandbox 처리
           const apiUrl =
             process.env.PLAYGROUNDS_API_URL || 'https://sonagi-playgrounds.sonagi-dev.workers.dev';
           const response = await axios.get<SandboxApiResponse>(`${apiUrl}/sandbox`, {
@@ -88,7 +167,7 @@ export const playCommand: Command = {
           if (data.status === 'success' && data.sandbox_url && data.preview_url) {
             const embed = new EmbedBuilder()
               .setColor(Colors.SUCCESS)
-              .setTitle('🎡 Sonagi Playgrounds Sandbox')
+              .setTitle('🎡 CodeSandbox 샌드박스')
               .setDescription(
                 `\`${examplePath}\` 예제 코드가 라이브 환경에 성공적으로 세팅되었습니다!`
               )
@@ -128,7 +207,6 @@ export const playCommand: Command = {
         const language = interaction.options.getString('language', true);
         let code = interaction.options.getString('code', true);
 
-        // Remove markdown formatting if provided and trim whitespace
         code = code
           .replace(/^```[a-z]*\n/i, '')
           .replace(/\n```$/i, '')
@@ -144,7 +222,7 @@ export const playCommand: Command = {
             pistonApiUrl,
             {
               language: language,
-              version: '*', // Use the latest available version
+              version: '*',
               files: [
                 {
                   content: code,
@@ -156,7 +234,6 @@ export const playCommand: Command = {
 
           const data = response.data;
           if (data.run) {
-            // Sanitize output to prevent breaking Discord's triple backtick embed
             const output = data.run.output ? data.run.output.replace(/```/g, "'''") : 'No output';
             const truncatedOutput =
               output.length > 2000 ? output.substring(0, 1997) + '...' : output;
