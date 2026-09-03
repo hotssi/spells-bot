@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.10.0](https://github.com/mindulle/sonagi-bots/compare/v1.9.0...v1.10.0) (2026-09-03)
+
+
+### Features
+
+* add tailored help commands for all bots ([a4dd60a](https://github.com/mindulle/sonagi-bots/commit/a4dd60ade7f93b3e951ab3ef072b419750fc05c2))
+* add tailored help commands for ops and media bots, update dev help ([c5de90c](https://github.com/mindulle/sonagi-bots/commit/c5de90c55052910e0ac7eeb3a349d6f3d845a87c))
+* auto-deploy guild commands on ready event ([#98](https://github.com/mindulle/sonagi-bots/issues/98)) ([e930b25](https://github.com/mindulle/sonagi-bots/commit/e930b2571e2e7184d6ebd1d41b4d45c759d23f06))
+* **dev-bot:** `/play sandbox` 자동완성 및 JupyterLite 노트북 지원 추가 ([9c866b6](https://github.com/mindulle/sonagi-bots/commit/9c866b61f9472e99f6f14949cbd0c9ecaff45246))
+* **dev-bot:** add autocomplete for playgrounds path and support JupyterLite notebooks ([935cd2d](https://github.com/mindulle/sonagi-bots/commit/935cd2dfbe30e5a286c64346f718b07edd0b1d16))
+* ops-bot internal scheduler and actionable snooze alerts ([157848d](https://github.com/mindulle/sonagi-bots/commit/157848dc9cab55c6482201090394ab1a1a66cd5d))
+* **ops-bot:** add /infra slash command ([254aa3e](https://github.com/mindulle/sonagi-bots/commit/254aa3e9b49ae2ca204881980365b8b1004c49eb))
+* **ops-bot:** add /infra slash command to display discord webhook mappings ([22efed0](https://github.com/mindulle/sonagi-bots/commit/22efed0168cb7045425bebd30e6c3675f7e873fb))
+* **ops-bot:** add emoji trigger bot for design-clip channel ([53bcc40](https://github.com/mindulle/sonagi-bots/commit/53bcc40df3c8d77e34a00772927c1b303d0a0f86))
+* **ops-bot:** integrate internal scheduler and actionable snooze alerts ([5a15fea](https://github.com/mindulle/sonagi-bots/commit/5a15fea6d4d243cb09bd7c691d3fbe905047eeae))
+* **ops-bot:** send image data to gallery server on design clip curation ([2cb5fd1](https://github.com/mindulle/sonagi-bots/commit/2cb5fd18e4fa689ff6873cf6a06d3c670fb082ee))
+* send image to gallery server on design curation ([fad8d2b](https://github.com/mindulle/sonagi-bots/commit/fad8d2b40784f13a5303346534a2ecd1ce00974a))
+
+
+### Bug Fixes
+
+* **dev-bot:** strip 'examples/' prefix from paths to match Playgrounds API and JupyterLite structure ([34427c1](https://github.com/mindulle/sonagi-bots/commit/34427c1d5176809033b96b0f91244b35d3adecad))
+* **dev-bot:** 자동완성 경로에서 `examples/` 접두사 제거 ([0b3722a](https://github.com/mindulle/sonagi-bots/commit/0b3722a8c679867c52ee372c762961c4013c8a47))
+* **ops-bot:** resolve eslint prefer-const on creator ([e60eca0](https://github.com/mindulle/sonagi-bots/commit/e60eca00ecb9f45e96f5931b4af365b827e73d9c))
+* **ops-bot:** resolve typescript unused variable and prettier format issues ([5e2481f](https://github.com/mindulle/sonagi-bots/commit/5e2481f6c28a4846691c769487a1b0ece3acc5d6))
+* register help commands in ops and media bot entries ([5e26d5e](https://github.com/mindulle/sonagi-bots/commit/5e26d5eb7adbf6923a52664ca03b2dd42f57bb37))
+* register help commands in ops and media bot entries ([8cc9509](https://github.com/mindulle/sonagi-bots/commit/8cc950948d10c567971b9a82c000cf1de7ecfdeb))
+
 ## [1.9.0](https://github.com/mindulle/sonagi-bots/compare/v1.8.0...v1.9.0) (2026-08-02)
 
 
