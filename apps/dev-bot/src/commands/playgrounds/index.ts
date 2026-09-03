@@ -49,24 +49,31 @@ async function fetchPlaygroundPaths() {
     return cachedPaths;
   }
   try {
-    const res = await axios.get('https://api.github.com/repos/mindulle/sonagi-playgrounds/git/trees/main?recursive=1', {
-      timeout: 5000,
-    });
-    
+    const res = await axios.get(
+      'https://api.github.com/repos/mindulle/sonagi-playgrounds/git/trees/main?recursive=1',
+      {
+        timeout: 5000,
+      }
+    );
+
     // .ipynb 파일이거나 package.json이 있는 폴더(JS/React) 추출
     const paths = res.data.tree
-      .filter((item: any) => item.type === 'blob' && (item.path.endsWith('.ipynb') || item.path.endsWith('package.json')))
+      .filter(
+        (item: any) =>
+          item.type === 'blob' &&
+          (item.path.endsWith('.ipynb') || item.path.endsWith('package.json'))
+      )
       .map((item: any) => {
         if (item.path.endsWith('.ipynb')) return item.path;
         return item.path.replace('/package.json', '');
       });
-      
+
     cachedPaths = paths;
     cacheTimestamp = now;
     return cachedPaths;
   } catch (err) {
     logger.error('Failed to fetch tree from GitHub for autocomplete', err);
-    return cachedPaths; 
+    return cachedPaths;
   }
 }
 
@@ -104,15 +111,13 @@ export const playCommand: Command = {
   async autocomplete(interaction: AutocompleteInteraction) {
     const focusedValue = interaction.options.getFocused();
     const paths = await fetchPlaygroundPaths();
-    
+
     // 필터링 및 최대 25개 반환 (디스코드 API 제한)
     const filtered = paths
       .filter((choice) => choice.toLowerCase().includes(focusedValue.toLowerCase()))
       .slice(0, 25);
 
-    await interaction.respond(
-      filtered.map((choice) => ({ name: choice, value: choice }))
-    );
+    await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
   },
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -126,13 +131,16 @@ export const playCommand: Command = {
         try {
           // 파이썬 노트북 분기 처리
           if (examplePath.endsWith('.ipynb')) {
-            const jupyterDomain = process.env.JUPYTERLITE_DOMAIN || 'https://mindulle.github.io/sonagi-playgrounds';
+            const jupyterDomain =
+              process.env.JUPYTERLITE_DOMAIN || 'https://mindulle.github.io/sonagi-playgrounds';
             const jupyterUrl = `${jupyterDomain}/lab/index.html?path=${examplePath}`;
 
             const embed = new EmbedBuilder()
               .setColor(Colors.SUCCESS)
               .setTitle('🐍 JupyterLite 샌드박스')
-              .setDescription(`\`${examplePath}\` 파이썬 노트북이 브라우저 실행 환경(JupyterLite)으로 준비되었습니다!`)
+              .setDescription(
+                `\`${examplePath}\` 파이썬 노트북이 브라우저 실행 환경(JupyterLite)으로 준비되었습니다!`
+              )
               .setTimestamp();
 
             const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -214,7 +222,7 @@ export const playCommand: Command = {
             pistonApiUrl,
             {
               language: language,
-              version: '*', 
+              version: '*',
               files: [
                 {
                   content: code,
